@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 506e1c209a7e93e42b6f13960640321a, type: 3}
+  m_Name: Head
+  m_EditorClassIdentifier: 
+  partName: Head
+  icon: {fileID: 0}
+  modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
+    type: 3}
+  weight: 0
+  energyConsumption: 0
+  price: 10000
+  scanRange: 240
+  lockDistance: 240
+  jumpTime: 0
+  jumpTimer: 0
+  boostTime: 0
+  boostTimer: 0
+  boostJumpTime: 0
+  boostJumpTimer: 0
+  boostRechargeTime: 0
+  boostRechargeTimer: 0
+  energyRechargeTime: 0
+  energyRechargeTimer: 0
+  boostEnergy: 0
+  boostEnergyMax: 0
+  boostCost: 0
+  boostJumpCost: 0
+  hyperBoostCost: 0
+  boostEfficiency: 0
+  energyRechargeRate: 0
+  energyRechargeRateBasic: 0

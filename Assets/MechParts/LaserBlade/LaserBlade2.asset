@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bdaad213f005c1459b03884e20cf33c, type: 3}
+  m_Name: LaserBlade2
+  m_EditorClassIdentifier: 
+  partName: LaserBlade02
+  icon: {fileID: 0}
+  modelPrefab: {fileID: 7610539568883928039, guid: d0e8c726d562d7f4a971ccc6d6dea014,
+    type: 3}
+  weight: 0
+  energyConsumption: 0
+  price: 30000
+  weaponType: 2
+  lockDistance: 0
+  bulletSpeed: 0
+  reloadTime: 3
+  spread: 0
+  ammo: 12
+  attackTrigger: LaserBladeSlash
+  attackRange: 24
+  projectilePrefab: {fileID: 0}
+  damageData:
+    Damage: 240
+    Type: 1
+  canCharge: 1
+  chargeTime: 0.72
+  chargeDamageData:
+    Damage: 600
+    Type: 1

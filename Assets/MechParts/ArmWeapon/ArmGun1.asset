@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bdaad213f005c1459b03884e20cf33c, type: 3}
+  m_Name: ArmGun1
+  m_EditorClassIdentifier: 
+  partName: ArmGun1
+  icon: {fileID: 0}
+  modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
+    type: 3}
+  weight: 0
+  energyConsumption: 0
+  price: 20000
+  weaponType: 1
+  lockDistance: 0
+  bulletSpeed: 120
+  reloadTime: 0.24
+  spread: 0
+  ammo: 120
+  attackTrigger: 
+  attackRange: 0
+  projectilePrefab: {fileID: 598417222192524591, guid: e6fa51a6dbbb63c4eb5884154e01bc41,
+    type: 3}
+  damageData:
+    Damage: 24
+    Type: 0
+  canCharge: 0
+  chargeTime: 1
+  chargeDamageData:
+    Damage: 72
+    Type: 0
