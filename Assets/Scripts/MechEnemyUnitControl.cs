@@ -7,6 +7,8 @@ public class MechEnemyUnitControl : MonoBehaviour, IDamageable
     public float maxHP = 100;
     public float currentHP;
     [SerializeField] private GameObject explosionPrefab;
+    [SerializeField] private GameObject veinPickupPrefab;
+    [SerializeField] private float veinValue;
     private bool isDead;
     private MechEnemyBlackboard blackboard;
     void Start()
@@ -55,6 +57,15 @@ public class MechEnemyUnitControl : MonoBehaviour, IDamageable
 
         isDead = true;
         blackboard.IsDead = true;
+
+        // Instantiate(veinPickupPrefab, transform.position, Quaternion.identity);
+        GameObject veinObj = Instantiate(veinPickupPrefab, transform.position, Quaternion.identity);
+
+        MechVeinPickup pickup = veinObj.GetComponent<MechVeinPickup>();
+
+        pickup.healRate = 0.05f * veinValue;
+
+        pickup.energyRate = 0.1f * veinValue;
 
         StartCoroutine(DeathRoutine());
     }

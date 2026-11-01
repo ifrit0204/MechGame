@@ -200,7 +200,7 @@ public class MechControl : MonoBehaviour, IDamageable
 
         Vector3 movement = camForward * moveInput.y + camRight * moveInput.x;
 
-        Vector3 targetMove = movement * moveSpeed * 100f;
+        Vector3 targetMove = movement * moveSpeed * 100f; // groundMultiplier
 
         // ★ 慣性を使って滑らかに移動
         horizontalVelocity = Vector3.Lerp(horizontalVelocity, targetMove, Time.fixedDeltaTime * 10f);
