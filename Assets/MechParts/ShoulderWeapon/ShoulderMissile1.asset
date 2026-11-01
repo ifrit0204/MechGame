@@ -17,22 +17,22 @@ MonoBehaviour:
   modelPrefab: {fileID: 0}
   weight: 0
   energyConsumption: 0
-  price: 20000
-  weaponType: 0
+  price: 30000
+  weaponType: 1
   lockDistance: 0
-  bulletSpeed: 0
-  reloadTime: 0
+  bulletSpeed: 300
+  reloadTime: 1
   spread: 0
-  ammo: 0
+  ammo: 120
   attackTrigger: 
   attackRange: 0
   projectilePrefab: {fileID: 5501864942918073808, guid: 692921dca265e5a4a854dd5459f43a3e,
     type: 3}
   damageData:
-    Damage: 0
-    Type: 0
+    Damage: 54
+    Type: 2
   canCharge: 0
   chargeTime: 0
   chargeDamageData:
-    Damage: 0
-    Type: 0
+    Damage: 156
+    Type: 2

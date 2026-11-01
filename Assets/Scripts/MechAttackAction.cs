@@ -40,6 +40,14 @@ public class MechAttackAction : MonoBehaviour
     // public bool isAttack;
     private Animator anim;
     private Rigidbody rb;
+    private bool leftArmFiring;
+    private bool rightArmFiring;
+    private bool leftShoulderFiring;
+    private bool rightShoulderFiring;
+    private float leftArmReload;
+    private float rightArmReload;
+    private float leftShoulderReload;
+    private float rightShoulderReload;
 
     void Start()
     {
@@ -84,8 +92,41 @@ public class MechAttackAction : MonoBehaviour
             if (xboxMap != null) xboxMap.Enable();
         }
     }
+    // public void OnRightArmAttack(InputAction.CallbackContext context)
+    // {
+    //     if (context.started)
+    //     {
+    //         rightArmCharging = true;
+    //         rightArmChargeTimer = 0;
+    //     }
+
+    //     if (context.canceled)
+    //     {
+    //         ReleaseRightArmAttack();
+    //     }
+    //     // if (context.performed)
+    //     // FireWeapon(WeaponSlot.RightArm);
+    // }
     public void OnRightArmAttack(InputAction.CallbackContext context)
     {
+        MechWeaponPartData weapon = equipment.rightWeapon;
+
+        if (weapon != null && !weapon.canCharge)
+        {
+            if (context.started)
+            {
+                rightArmFiring = true;
+            }
+
+            if (context.canceled)
+            {
+                rightArmFiring = false;
+            }
+
+            return;
+        }
+
+        // チャージ武器
         if (context.started)
         {
             rightArmCharging = true;
@@ -96,26 +137,57 @@ public class MechAttackAction : MonoBehaviour
         {
             ReleaseRightArmAttack();
         }
-        // if (context.performed)
-        // FireWeapon(WeaponSlot.RightArm);
     }
 
     public void OnLeftArmAttack(InputAction.CallbackContext context)
     {
         if (context.performed)
-        FireWeapon(WeaponSlot.LeftArm);
+        {
+            FireWeapon(WeaponSlot.LeftArm);
+        }
+        if(context.started)
+        {
+            leftArmFiring = true;
+        }
+
+        if(context.canceled)
+        {
+            leftArmFiring = false;
+        }
     }
 
     public void OnRightShoulderAttack(InputAction.CallbackContext context)
     {
         if (context.performed)
-        FireWeapon(WeaponSlot.RightShoulder);
+        {
+            FireWeapon(WeaponSlot.RightShoulder);
+        }
+        if(context.started)
+        {
+            rightShoulderFiring = true;
+        }
+
+        if(context.canceled)
+        {
+            rightShoulderFiring = false;
+        }
     }
 
     public void OnLeftShoulderAttack(InputAction.CallbackContext context)
     {
         if (context.performed)
-        FireWeapon(WeaponSlot.LeftShoulder);
+        {
+            FireWeapon(WeaponSlot.LeftShoulder);
+        }
+        if(context.started)
+        {
+            leftShoulderFiring = true;
+        }
+
+        if(context.canceled)
+        {
+            leftShoulderFiring = false;
+        }
     }
 
     private MechWeaponPartData GetWeapon(WeaponSlot slot)
@@ -308,6 +380,8 @@ public class MechAttackAction : MonoBehaviour
     private void Update()
     {
         ChargeWeapon();
+
+        HandleAutoFire();
     }
     private void ChargeWeapon()
     {
@@ -329,6 +403,79 @@ public class MechAttackAction : MonoBehaviour
         if(leftShoulderCharging)
         {
             leftShoulderChargeTimer += Time.deltaTime;
+        }
+    }
+    private void HandleAutoFire()
+    {
+        if (rightArmReload > 0)
+            rightArmReload -= Time.deltaTime;
+
+        if(leftArmReload > 0)
+            leftArmReload -= Time.deltaTime;
+
+        if(rightShoulderReload > 0)
+            rightShoulderReload -= Time.deltaTime;
+
+        if(leftShoulderReload > 0)
+            leftShoulderReload -= Time.deltaTime;
+
+        // if(rightArmFiring)
+        // {
+        //     MechWeaponPartData weapon = equipment.rightWeapon;
+
+        //     if(weapon != null && rightArmReload <= 0)
+        //     {
+        //         FireWeapon(WeaponSlot.RightArm);
+
+        //         rightArmReload = weapon.reloadTime;
+        //     }
+        // }
+        if(rightArmFiring)
+        {
+            MechWeaponPartData weapon = equipment.rightWeapon;
+
+            if(weapon != null && weapon.weaponType == WeaponType.Shooting && rightArmReload <= 0)
+            {
+                FireWeapon(WeaponSlot.RightArm);
+
+                rightArmReload = weapon.reloadTime;
+            }
+        }
+
+        if(leftArmFiring)
+        {
+            MechWeaponPartData weapon = equipment.leftWeapon;
+
+            if(weapon != null && weapon.weaponType == WeaponType.Shooting && leftArmReload <= 0)
+            {
+                FireWeapon(WeaponSlot.LeftArm);
+
+                leftArmReload = weapon.reloadTime;
+            }
+        }
+
+        if(rightShoulderFiring)
+        {
+            MechWeaponPartData weapon = equipment.rightShoulder;
+
+            if(weapon != null && weapon.weaponType == WeaponType.Shooting && rightShoulderReload <= 0)
+            {
+                FireWeapon(WeaponSlot.RightShoulder);
+
+                rightShoulderReload = weapon.reloadTime;
+            }
+        }
+
+        if(leftShoulderFiring)
+        {
+            MechWeaponPartData weapon = equipment.leftShoulder;
+
+            if(weapon != null && weapon.weaponType == WeaponType.Shooting && leftShoulderReload <= 0)
+            {
+                FireWeapon(WeaponSlot.LeftShoulder);
+
+                leftShoulderReload = weapon.reloadTime;
+            }
         }
     }
     private void ReleaseRightArmAttack()

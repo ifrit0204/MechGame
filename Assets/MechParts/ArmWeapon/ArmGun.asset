@@ -22,7 +22,7 @@ MonoBehaviour:
   weaponType: 1
   lockDistance: 0
   bulletSpeed: 120
-  reloadTime: 0.24
+  reloadTime: 0.36
   spread: 0
   ammo: 120
   attackTrigger: 
@@ -30,7 +30,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 598417222192524591, guid: e6fa51a6dbbb63c4eb5884154e01bc41,
     type: 3}
   damageData:
-    Damage: 24
+    Damage: 36
     Type: 0
   canCharge: 0
   chargeTime: 1

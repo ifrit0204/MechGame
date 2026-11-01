@@ -19,8 +19,8 @@ MonoBehaviour:
   weight: 0
   energyConsumption: 0
   price: 20000
-  moveSpeed: 12000
-  jumpForce: 120
+  moveSpeed: 156
+  jumpForce: 156
   jumpPerformance: 300
   jumpTime: 1
   jumpTimer: 1

@@ -19,7 +19,7 @@ MonoBehaviour:
   weight: 0
   energyConsumption: 0
   price: 40000
-  boostForce: 360
+  boostForce: 720
   boostFirstForce: 2400
   boostCost: 36
   boostEfficiency: 0

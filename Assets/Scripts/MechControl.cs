@@ -200,16 +200,16 @@ public class MechControl : MonoBehaviour, IDamageable
 
         Vector3 movement = camForward * moveInput.y + camRight * moveInput.x;
 
-        Vector3 targetMove = movement * moveSpeed;
+        Vector3 targetMove = movement * moveSpeed * 100f;
 
         // ★ 慣性を使って滑らかに移動
-        horizontalVelocity = Vector3.Lerp(horizontalVelocity, targetMove, Time.fixedDeltaTime * 5f);
+        horizontalVelocity = Vector3.Lerp(horizontalVelocity, targetMove, Time.fixedDeltaTime * 10f);
 
         if (isGrounded) rb.AddForce(horizontalVelocity, ForceMode.Acceleration);
         else if (!isGrounded && (isJump || isFall || boostJump))
         {
             // ★ 空中専用の移動速度（慣性ではなく入力方向へ）
-            Vector3 airMove = movement * (moveSpeed * 0.0054f);
+            Vector3 airMove = movement * (moveSpeed * 0.54f);
 
             airMove = Vector3.Lerp(airMove, Vector3.zero, Time.fixedDeltaTime);
 

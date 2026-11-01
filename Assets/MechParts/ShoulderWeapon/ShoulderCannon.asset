@@ -18,7 +18,7 @@ MonoBehaviour:
   weight: 0
   energyConsumption: 0
   price: 20000
-  weaponType: 0
+  weaponType: 1
   lockDistance: 0
   bulletSpeed: 0
   reloadTime: 0
@@ -26,7 +26,8 @@ MonoBehaviour:
   ammo: 0
   attackTrigger: 
   attackRange: 0
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 598417222192524591, guid: e6fa51a6dbbb63c4eb5884154e01bc41,
+    type: 3}
   damageData:
     Damage: 0
     Type: 0

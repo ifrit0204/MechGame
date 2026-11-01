@@ -19,14 +19,14 @@ MonoBehaviour:
   weight: 0
   energyConsumption: 0
   price: 10000
-  boostForce: 360
+  boostForce: 540
   boostFirstForce: 2400
   boostCost: 36
   boostEfficiency: 0
-  boostJumpForce: 1200
+  boostJumpForce: 840
   boostJumpCost: 60
-  hyperBoostForce: 600
-  hyperBoostFirstForce: 1200
+  hyperBoostForce: 480
+  hyperBoostFirstForce: 720
   hyperBoostCost: 48
   boostTime: 0
   boostTimer: 0
