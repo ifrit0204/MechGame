@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 000da6a4b4876ab4484947028865e5e5, type: 3}
+  m_Name: ArenaEnemy1
+  m_EditorClassIdentifier: 
+  enemyName: "\u8FC5\u96F7\u306E\u30A2\u30EA\u30B7\u30A2"
+  description: "\u5143\u3005\u306E\u8EAB\u4F53\u80FD\u529B\u304C\u9AD8\u304F\u63A5\u8FD1\u3057\u3066\u306E\u6226\u95D8\u306B\u5F37\u3044\n\u597D\u6A5F\u3068\u898B\u308B\u3068\u8DDD\u96E2\u3092\u8A70\u3081\u5F97\u610F\u306E\u8FD1\u63A5\u6B66\u5668\u3067\u653B\u6483\u3059\u308B"
+  reward: 20000
+  loadout: {fileID: 11400000, guid: 3dbedbd8ee5fca748b38e42dea115a21, type: 2}
+  arenaRank: 29

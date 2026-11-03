@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: FCS
   m_EditorClassIdentifier: 
   partName: FCS
+  description: "\u6700\u521D\u306E\u706B\u5668\u7BA1\u5236\u30B7\u30B9\u30C6\u30E0\n\u6027\u80FD\u306F\u4F4E\u3044\u304C\u51E6\u7406\u306F\u65E9\u3044"
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}

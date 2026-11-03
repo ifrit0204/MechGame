@@ -4,7 +4,7 @@ using UnityEngine;
 public class MechArenaEnemyData : ScriptableObject
 {
     public string enemyName;
-
+    [TextArea(2, 5)]
     public string description;
 
     public int reward;

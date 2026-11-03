@@ -22,5 +22,6 @@ MonoBehaviour:
   moveSpeed: 156
   jumpForce: 156
   jumpPerformance: 300
+  groundMultiplier: 120
   jumpTime: 1
   jumpTimer: 1

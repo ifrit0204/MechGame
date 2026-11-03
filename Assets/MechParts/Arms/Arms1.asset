@@ -13,11 +13,16 @@ MonoBehaviour:
   m_Name: Arms1
   m_EditorClassIdentifier: 
   partName: Arms1
+  description: "\u6700\u521D\u306E\u8155\u3068\u306E\u9055\u3044\u306E\u8AAC\u660E\n\u8155\u90E8\u6027\u80FD\u306E\u7279\u5FB4\u306E\u8AAC\u660E"
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}
   weight: 0
   energyConsumption: 0
   price: 20000
-  scanRange: 0
-  lockDistance: 0
+  armorPoint: 3180
+  recoilReduction: 300
+  armMobility: 360
+  armStabilityPerformance: 240
+  aimingPerformance: 360
+  armMeleeWeaponAptitude: 240

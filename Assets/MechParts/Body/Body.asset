@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Body
   m_EditorClassIdentifier: 
   partName: Body
+  description: "\u6700\u521D\u306E\u80F4\u4F53\u90E8\n\u30B8\u30A7\u30CD\u30EC\u30FC\u30BF\u3084FCS\u3068\u30D6\u30FC\u30B9\u30BF\u306E\u52B9\u679C\u4F1D\u9054\u52B9\u7387\u304C\u5C11\u3057\u4F4E\u3044\n\u65E9\u3081\u306B\u8CB7\u3044\u63DB\u3048\u3055\u305B\u308B\u76EE\u7684\u3060\u304C\u5EC9\u4FA1\u306A\u308A\u306B\u4F4E\u8CA0\u8377\u3067\u6027\u80FD\u306F\u9AD8\u3044"
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}
   weight: 0
   energyConsumption: 0
   price: 10000
-  scanRange: 0
-  lockDistance: 0
+  armorPoint: 3960
+  bodyStabilityPerformance: 240
+  bodyMeleeWeaponAptitude: 360

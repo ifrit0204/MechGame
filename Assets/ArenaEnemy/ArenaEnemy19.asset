@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 000da6a4b4876ab4484947028865e5e5, type: 3}
+  m_Name: ArenaEnemy19
+  m_EditorClassIdentifier: 
+  enemyName: "\u6708\u5F71\u306E\u30EA\u30C3\u30BF\u30FC"
+  description: "\u76F8\u624B\u306B\u6A5F\u5F71\u3059\u3089\u6349\u3048\u3055\u305B\u305A\u6B7B\u89D2\u304B\u3089\u4E00\u65B9\u7684\u306B\u653B\u3081\u7D9A\u3051\u308B\n\u6D3E\u624B\u306A\u4E00\u6483\u3088\u308A\u3082\u5E38\u306B\u524A\u308B\u3053\u3068\u3067\u78BA\u5B9F\u306B\u76F8\u624B\u306E\u88C5\u7532\u3092\u524A\u304E\u843D\u3068\u3059"
+  reward: 300000
+  loadout: {fileID: 11400000, guid: 3dbedbd8ee5fca748b38e42dea115a21, type: 2}
+  arenaRank: 28

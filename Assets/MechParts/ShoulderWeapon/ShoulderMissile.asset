@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ShoulderMissile
   m_EditorClassIdentifier: 
   partName: ShoulderMissile
+  description: "\u6700\u521D\u306E\u80A9\u6B66\u5668\n\u5A01\u529B\u306F\u4F4E\u3044\u304C\u9023\u5C04\u6027\u80FD\u304C\u9AD8\u3044"
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}

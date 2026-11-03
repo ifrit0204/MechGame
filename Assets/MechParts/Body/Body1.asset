@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Body1
   m_EditorClassIdentifier: 
   partName: Body1
+  description: 
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}
   weight: 0
   energyConsumption: 0
   price: 20000
-  scanRange: 0
-  lockDistance: 0
+  armorPoint: 5400
+  bodyStabilityPerformance: 360
+  bodyMeleeWeaponAptitude: 240

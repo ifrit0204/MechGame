@@ -6,9 +6,12 @@ public class MechHeadPartData : MechPartData
 {
     // public string partName;
     // public GameObject modelPrefab;
+    public float armorPoint; // Armor Point
+    public float headStabilityPerformance; // stability
+    public float headMeleeWeaponAptitude; // melee Weapon Performance
     public float scanRange;
     public float lockDistance;
     // public float moveSpeed, jumpForce, jumpPerformance, boostForce, boostFirstForce, boostJumpForce, hyperBoost, hyperFirstBoost, fallSpeed, jumpCancelSpeed;
-    public float jumpTime, jumpTimer, boostTime, boostTimer, boostJumpTime, boostJumpTimer, boostRechargeTime, boostRechargeTimer, energyRechargeTime, energyRechargeTimer;
-    public float boostEnergy, boostEnergyMax, boostCost, boostJumpCost, hyperBoostCost, boostEfficiency, energyRechargeRate, energyRechargeRateBasic;
+    // public float jumpTime, jumpTimer, boostTime, boostTimer, boostJumpTime, boostJumpTimer, boostRechargeTime, boostRechargeTimer, energyRechargeTime, energyRechargeTimer;
+    // public float boostEnergy, boostEnergyMax, boostCost, boostJumpCost, hyperBoostCost, boostEfficiency, energyRechargeRate, energyRechargeRateBasic;
 }

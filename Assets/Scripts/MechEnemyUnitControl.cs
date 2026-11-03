@@ -14,6 +14,7 @@ public class MechEnemyUnitControl : MonoBehaviour, IDamageable
     void Start()
     {
         isDead = false;
+        // MechGameManager.Instance.enemyCount++;
         currentHP = maxHP;
         blackboard = GetComponent<MechEnemyBlackboard>();
         blackboard.CurrentHP = currentHP;
@@ -48,6 +49,8 @@ public class MechEnemyUnitControl : MonoBehaviour, IDamageable
     void Die()
     {
         MechGameManager.Instance.CurrentResult.enemyKillCount++;
+        // MechGameManager.Instance.EnemyDestroyed();
+
 
         if (isDead)
         return;
@@ -85,6 +88,9 @@ public class MechEnemyUnitControl : MonoBehaviour, IDamageable
 
         yield return new WaitForSeconds(2f);
 
+        Debug.Log("DeathRoutine End");
+
+        // MechGameManager.Instance.EnemyDestroyed();
         MechGameManager.Instance.EnemyDestroyed();
 
         Destroy(gameObject);

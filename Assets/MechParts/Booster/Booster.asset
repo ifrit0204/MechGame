@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Booster
   m_EditorClassIdentifier: 
   partName: Booster
+  description: "\u6700\u521D\u306E\u30D6\u30FC\u30B9\u30BF\u30FC\n\u6700\u4F4E\u9650\u306E\u6027\u80FD\u306F\u5099\u3048\u3066\u3044\u308B"
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}

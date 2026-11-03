@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class MechControl : MonoBehaviour, IDamageable
 {
-    public float moveSpeed, jumpForce, jumpPerformance, boostForce, boostFirstForce, boostJumpForce, hyperBoost, hyperFirstBoost, fallSpeed, jumpCancelSpeed;
+    public float moveSpeed, jumpForce, jumpPerformance, groundMultiplier, boostForce, boostFirstForce, boostJumpForce, hyperBoost, hyperFirstBoost, fallSpeed, jumpCancelSpeed;
     public float boostEnergy, boostEnergyMax, boostCost, boostJumpCost, hyperBoostCost, boostEfficiency, energyRechargeRate, energyRechargeRateBasic;
     public float jumpTime, jumpTimer, boostTime, boostTimer, boostJumpTime, boostJumpTimer, boostRechargeTime, boostRechargeTimer, energyRechargeTime, energyRechargeTimer;
     public float groundCheckDistance, upwardLimit;
@@ -100,6 +100,7 @@ public class MechControl : MonoBehaviour, IDamageable
             return;
         if(equipment.legs != null)
             moveSpeed = equipment.legs.moveSpeed;
+            groundMultiplier = equipment.legs.groundMultiplier;
         if(equipment.booster != null)
             boostForce = equipment.booster.boostForce;
         if(equipment.generator != null)
@@ -200,7 +201,7 @@ public class MechControl : MonoBehaviour, IDamageable
 
         Vector3 movement = camForward * moveInput.y + camRight * moveInput.x;
 
-        Vector3 targetMove = movement * moveSpeed * 100f; // groundMultiplier
+        Vector3 targetMove = movement * moveSpeed * groundMultiplier; // groundMultiplier
 
         // ★ 慣性を使って滑らかに移動
         horizontalVelocity = Vector3.Lerp(horizontalVelocity, targetMove, Time.fixedDeltaTime * 10f);

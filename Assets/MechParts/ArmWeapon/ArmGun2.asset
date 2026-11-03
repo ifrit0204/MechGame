@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ArmGun2
   m_EditorClassIdentifier: 
   partName: ArmGun2
+  description: "\u5F3E\u901F\u306F\u9045\u3044\u304C\u5A01\u529B\u306E\u9AD8\u3044\u6B66\u5668\n\u9023\u5C04\u306F\u52B9\u304B\u306A\u3044\u304C\u5F53\u305F\u308C\u3070\u5F37\u3044"
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: LaserBlade
   m_EditorClassIdentifier: 
   partName: LaserBlade00
+  description: "\u6700\u521D\u306E\u30D6\u30EC\u30FC\u30C9\n\u8CA0\u8377\u304C\u4F4E\u304F\u5A01\u529B\u306F\u9AD8\u3044\u304C\u7BC4\u56F2\u304C\u72ED\u3044"
   icon: {fileID: 0}
   modelPrefab: {fileID: 7610539568883928039, guid: d0e8c726d562d7f4a971ccc6d6dea014,
     type: 3}

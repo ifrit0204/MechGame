@@ -125,9 +125,7 @@ public class MechEquipment : MonoBehaviour
     // 共通のパーツ変更処理
     //==================================================
 
-    public void ChangePart(
-        PartType partType,
-        int index)
+    public void ChangePart(PartType partType, int index)
     {
         if (database == null)
         {
@@ -140,22 +138,14 @@ public class MechEquipment : MonoBehaviour
 
         if (parts == null)
         {
-            Debug.LogError(
-                "パーツ一覧が存在しません : " +
-                partType
-            );
+            Debug.LogError("パーツ一覧が存在しません : " + partType);
 
             return;
         }
 
         if (index < 0 || index >= parts.Length)
         {
-            Debug.LogError(
-                "パーツIndexが範囲外です : " +
-                partType +
-                " / " +
-                index
-            );
+            Debug.LogError("パーツIndexが範囲外です : " + partType + " / " + index);
 
             return;
         }
@@ -164,12 +154,7 @@ public class MechEquipment : MonoBehaviour
 
         if (part == null)
         {
-            Debug.LogError(
-                "パーツデータがnullです : " +
-                partType +
-                " / " +
-                index
-            );
+            Debug.LogError("パーツデータがnullです : " + partType + " / " + index);
 
             return;
         }
@@ -193,9 +178,7 @@ public class MechEquipment : MonoBehaviour
             mech.ApplyParts();
         }
     }
-    public void ChangePart(
-    PartType partType,
-    MechPartData part)
+    public void ChangePart(PartType partType, MechPartData part)
     {
         if(part == null)
             return;
@@ -215,76 +198,52 @@ public class MechEquipment : MonoBehaviour
     // 実際の装備処理
     //==================================================
 
-    public void EquipPart(
-        PartType partType,
-        MechPartData part)
+    public void EquipPart(PartType partType, MechPartData part)
     {
         switch (partType)
         {
             case PartType.Head:
-                EquipHead(
-                    (MechHeadPartData)part
-                );
+                EquipHead((MechHeadPartData)part);
                 break;
 
             case PartType.Body:
-                EquipBody(
-                    (MechBodyPartData)part
-                );
+                EquipBody((MechBodyPartData)part);
                 break;
 
             case PartType.Arms:
-                EquipArms(
-                    (MechArmsPartData)part
-                );
+                EquipArms((MechArmsPartData)part);
                 break;
 
             case PartType.Legs:
-                EquipLegs(
-                    (MechLegsPartData)part
-                );
+                EquipLegs((MechLegsPartData)part);
                 break;
 
             case PartType.RightWeapon:
-                EquipRightWeapon(
-                    (MechWeaponPartData)part
-                );
+                EquipRightWeapon((MechWeaponPartData)part);
                 break;
 
             case PartType.LeftWeapon:
-                EquipLeftWeapon(
-                    (MechWeaponPartData)part
-                );
+                EquipLeftWeapon((MechWeaponPartData)part);
                 break;
 
             case PartType.RightShoulder:
-                EquipRightShoulderWeapon(
-                    (MechWeaponPartData)part
-                );
+                EquipRightShoulderWeapon((MechWeaponPartData)part);
                 break;
 
             case PartType.LeftShoulder:
-                EquipLeftShoulderWeapon(
-                    (MechWeaponPartData)part
-                );
+                EquipLeftShoulderWeapon((MechWeaponPartData)part);
                 break;
 
             case PartType.Booster:
-                EquipBooster(
-                    (MechBoosterPartData)part
-                );
+                EquipBooster((MechBoosterPartData)part);
                 break;
 
             case PartType.FCS:
-                EquipFCS(
-                    (MechFCSPartData)part
-                );
+                EquipFCS((MechFCSPartData)part);
                 break;
 
             case PartType.Generator:
-                EquipGenerator(
-                    (MechGeneratorPartData)part
-                );
+                EquipGenerator((MechGeneratorPartData)part);
                 break;
         }
     }
@@ -294,82 +253,67 @@ public class MechEquipment : MonoBehaviour
     // Loadout更新
     //==================================================
 
-    private void UpdateLoadout(
-        PartType partType,
-        MechPartData part)
+    private void UpdateLoadout(PartType partType, MechPartData part)
     {
         if (MechGameManager.Instance == null)
         {
             return;
         }
 
-        MechLoadout loadout =
-            MechGameManager.Instance.CurrentLoadout;
+        MechLoadout loadout = MechGameManager.Instance.CurrentLoadout;
 
         if (loadout == null)
         {
             loadout = new MechLoadout();
 
-            MechGameManager.Instance.CurrentLoadout =
-                loadout;
+            MechGameManager.Instance.CurrentLoadout = loadout;
         }
 
 
         switch (partType)
         {
             case PartType.Head:
-                loadout.Head =
-                    (MechHeadPartData)part;
+                loadout.Head = (MechHeadPartData)part;
                 break;
 
             case PartType.Body:
-                loadout.Body =
-                    (MechBodyPartData)part;
+                loadout.Body = (MechBodyPartData)part;
                 break;
 
             case PartType.Arms:
-                loadout.Arms =
-                    (MechArmsPartData)part;
+                loadout.Arms = (MechArmsPartData)part;
                 break;
 
             case PartType.Legs:
-                loadout.Legs =
-                    (MechLegsPartData)part;
+                loadout.Legs = (MechLegsPartData)part;
                 break;
 
             case PartType.RightWeapon:
-                loadout.RightWeapon =
-                    (MechWeaponPartData)part;
+                loadout.RightWeapon = (MechWeaponPartData)part;
                 break;
 
             case PartType.LeftWeapon:
-                loadout.LeftWeapon =
-                    (MechWeaponPartData)part;
+                loadout.LeftWeapon = (MechWeaponPartData)part;
                 break;
 
             case PartType.RightShoulder:
-                loadout.RightShoulder =
-                    (MechWeaponPartData)part;
+                loadout.RightShoulder = (MechWeaponPartData)part;
                 break;
 
             case PartType.LeftShoulder:
-                loadout.LeftShoulder =
-                    (MechWeaponPartData)part;
+                loadout.LeftShoulder = (MechWeaponPartData)part;
                 break;
 
             case PartType.Booster:
-                loadout.Booster =
-                    (MechBoosterPartData)part;
+                loadout.Booster = (MechBoosterPartData)part;
                 break;
 
             case PartType.FCS:
-                loadout.FCS =
-                    (MechFCSPartData)part;
+                loadout.FCS = (MechFCSPartData)part;
                 break;
 
             case PartType.Generator:
-                loadout.Generator =
-                    (MechGeneratorPartData)part;
+                loadout.Generator = (MechGeneratorPartData)part;
                 break;
         }
     }
@@ -379,9 +323,7 @@ public class MechEquipment : MonoBehaviour
     // Index更新
     //==================================================
 
-    private void SetCurrentIndex(
-        PartType partType,
-        int index)
+    private void SetCurrentIndex(PartType partType, int index)
     {
         switch (partType)
         {
@@ -436,12 +378,9 @@ public class MechEquipment : MonoBehaviour
     // Head
     //==================================================
 
-    public void EquipHead(
-        MechHeadPartData part)
+    public void EquipHead(MechHeadPartData part)
     {
-        DestroyCurrent(
-            ref currentHead
-        );
+        DestroyCurrent(ref currentHead);
 
         if (part == null || part.modelPrefab == null)
         {
@@ -449,11 +388,7 @@ public class MechEquipment : MonoBehaviour
             return;
         }
 
-        currentHead =
-            Instantiate(
-                part.modelPrefab,
-                headSocket
-            );
+        currentHead = Instantiate(part.modelPrefab, headSocket);
 
         head = part;
     }
@@ -463,12 +398,9 @@ public class MechEquipment : MonoBehaviour
     // Body
     //==================================================
 
-    public void EquipBody(
-        MechBodyPartData part)
+    public void EquipBody(MechBodyPartData part)
     {
-        DestroyCurrent(
-            ref currentBody
-        );
+        DestroyCurrent(ref currentBody);
 
         if (part == null || part.modelPrefab == null)
         {
@@ -476,11 +408,7 @@ public class MechEquipment : MonoBehaviour
             return;
         }
 
-        currentBody =
-            Instantiate(
-                part.modelPrefab,
-                bodySocket
-            );
+        currentBody = Instantiate(part.modelPrefab, bodySocket);
 
         body = part;
     }
@@ -490,12 +418,9 @@ public class MechEquipment : MonoBehaviour
     // Arms
     //==================================================
 
-    public void EquipArms(
-        MechArmsPartData part)
+    public void EquipArms(MechArmsPartData part)
     {
-        DestroyCurrent(
-            ref currentArms
-        );
+        DestroyCurrent(ref currentArms);
 
         if (part == null || part.modelPrefab == null)
         {
@@ -503,11 +428,7 @@ public class MechEquipment : MonoBehaviour
             return;
         }
 
-        currentArms =
-            Instantiate(
-                part.modelPrefab,
-                armsSocket
-            );
+        currentArms = Instantiate(part.modelPrefab, armsSocket);
 
         arms = part;
     }
@@ -517,12 +438,9 @@ public class MechEquipment : MonoBehaviour
     // Legs
     //==================================================
 
-    public void EquipLegs(
-        MechLegsPartData part)
+    public void EquipLegs(MechLegsPartData part)
     {
-        DestroyCurrent(
-            ref currentLegs
-        );
+        DestroyCurrent( ref currentLegs);
 
         if (part == null || part.modelPrefab == null)
         {
@@ -530,11 +448,7 @@ public class MechEquipment : MonoBehaviour
             return;
         }
 
-        currentLegs =
-            Instantiate(
-                part.modelPrefab,
-                legsSocket
-            );
+        currentLegs = Instantiate(part.modelPrefab, legsSocket);
 
         legs = part;
     }
@@ -544,12 +458,9 @@ public class MechEquipment : MonoBehaviour
     // Right Weapon
     //==================================================
 
-    public void EquipRightWeapon(
-        MechWeaponPartData part)
+    public void EquipRightWeapon(MechWeaponPartData part)
     {
-        DestroyCurrent(
-            ref currentRightWeapon
-        );
+        DestroyCurrent(ref currentRightWeapon);
 
         if (part == null || part.modelPrefab == null)
         {
@@ -557,11 +468,7 @@ public class MechEquipment : MonoBehaviour
             return;
         }
 
-        currentRightWeapon =
-            Instantiate(
-                part.modelPrefab,
-                rightWeaponSocket
-            );
+        currentRightWeapon = Instantiate(part.modelPrefab, rightWeaponSocket);
 
         rightWeapon = part;
     }
@@ -571,12 +478,9 @@ public class MechEquipment : MonoBehaviour
     // Left Weapon
     //==================================================
 
-    public void EquipLeftWeapon(
-        MechWeaponPartData part)
+    public void EquipLeftWeapon(MechWeaponPartData part)
     {
-        DestroyCurrent(
-            ref currentLeftWeapon
-        );
+        DestroyCurrent(ref currentLeftWeapon);
 
         CurrentMeleeWeapon = null;
 
@@ -586,17 +490,12 @@ public class MechEquipment : MonoBehaviour
             return;
         }
 
-        currentLeftWeapon =
-            Instantiate(
-                part.modelPrefab,
-                leftWeaponSocket
-            );
+        currentLeftWeapon = Instantiate(part.modelPrefab, leftWeaponSocket);
 
         leftWeapon = part;
 
 
-        CurrentMeleeWeapon =
-            currentLeftWeapon.GetComponent<MechMeleeWeapon>();
+        CurrentMeleeWeapon = currentLeftWeapon.GetComponent<MechMeleeWeapon>();
 
         if (CurrentMeleeWeapon != null)
         {
@@ -609,12 +508,9 @@ public class MechEquipment : MonoBehaviour
     // Right Shoulder
     //==================================================
 
-    public void EquipRightShoulderWeapon(
-        MechWeaponPartData part)
+    public void EquipRightShoulderWeapon(MechWeaponPartData part)
     {
-        DestroyCurrent(
-            ref currentRightShoulder
-        );
+        DestroyCurrent(ref currentRightShoulder);
 
         if (part == null || part.modelPrefab == null)
         {
@@ -622,11 +518,7 @@ public class MechEquipment : MonoBehaviour
             return;
         }
 
-        currentRightShoulder =
-            Instantiate(
-                part.modelPrefab,
-                rightShoulderSocket
-            );
+        currentRightShoulder = Instantiate(part.modelPrefab, rightShoulderSocket);
 
         rightShoulder = part;
     }
@@ -636,12 +528,9 @@ public class MechEquipment : MonoBehaviour
     // Left Shoulder
     //==================================================
 
-    public void EquipLeftShoulderWeapon(
-        MechWeaponPartData part)
+    public void EquipLeftShoulderWeapon(MechWeaponPartData part)
     {
-        DestroyCurrent(
-            ref currentLeftShoulder
-        );
+        DestroyCurrent(ref currentLeftShoulder);
 
         if (part == null || part.modelPrefab == null)
         {
@@ -649,11 +538,7 @@ public class MechEquipment : MonoBehaviour
             return;
         }
 
-        currentLeftShoulder =
-            Instantiate(
-                part.modelPrefab,
-                leftShoulderSocket
-            );
+        currentLeftShoulder = Instantiate(part.modelPrefab, leftShoulderSocket);
 
         leftShoulder = part;
     }
@@ -663,12 +548,9 @@ public class MechEquipment : MonoBehaviour
     // Booster
     //==================================================
 
-    public void EquipBooster(
-        MechBoosterPartData part)
+    public void EquipBooster(MechBoosterPartData part)
     {
-        DestroyCurrent(
-            ref currentBooster
-        );
+        DestroyCurrent(ref currentBooster);
 
         if (part == null || part.modelPrefab == null)
         {
@@ -676,11 +558,7 @@ public class MechEquipment : MonoBehaviour
             return;
         }
 
-        currentBooster =
-            Instantiate(
-                part.modelPrefab,
-                boosterSocket
-            );
+        currentBooster = Instantiate(part.modelPrefab, boosterSocket);
 
         booster = part;
     }
@@ -690,12 +568,9 @@ public class MechEquipment : MonoBehaviour
     // FCS
     //==================================================
 
-    public void EquipFCS(
-        MechFCSPartData part)
+    public void EquipFCS(MechFCSPartData part)
     {
-        DestroyCurrent(
-            ref currentFCS
-        );
+        DestroyCurrent(ref currentFCS);
 
         if (part == null || part.modelPrefab == null)
         {
@@ -703,11 +578,7 @@ public class MechEquipment : MonoBehaviour
             return;
         }
 
-        currentFCS =
-            Instantiate(
-                part.modelPrefab,
-                FCSSocket
-            );
+        currentFCS = Instantiate(part.modelPrefab, FCSSocket);
 
         FCS = part;
     }
@@ -717,12 +588,9 @@ public class MechEquipment : MonoBehaviour
     // Generator
     //==================================================
 
-    public void EquipGenerator(
-        MechGeneratorPartData part)
+    public void EquipGenerator(MechGeneratorPartData part)
     {
-        DestroyCurrent(
-            ref currentGenerator
-        );
+        DestroyCurrent(ref currentGenerator);
 
         if (part == null || part.modelPrefab == null)
         {
@@ -730,11 +598,7 @@ public class MechEquipment : MonoBehaviour
             return;
         }
 
-        currentGenerator =
-            Instantiate(
-                part.modelPrefab,
-                generatorSocket
-            );
+        currentGenerator = Instantiate(part.modelPrefab, generatorSocket);
 
         generator = part;
     }
@@ -744,8 +608,7 @@ public class MechEquipment : MonoBehaviour
     // GameObject削除
     //==================================================
 
-    private void DestroyCurrent(
-        ref GameObject current)
+    private void DestroyCurrent(ref GameObject current)
     {
         if (current != null)
         {
@@ -759,8 +622,7 @@ public class MechEquipment : MonoBehaviour
     // 現在装備パーツ取得
     //==================================================
 
-    public MechPartData GetCurrentPart(
-        PartType partType)
+    public MechPartData GetCurrentPart(PartType partType)
     {
         switch (partType)
         {
@@ -806,8 +668,7 @@ public class MechEquipment : MonoBehaviour
     // 現在Index取得
     //==================================================
 
-    public int GetCurrentIndex(
-        PartType partType)
+    public int GetCurrentIndex(PartType partType)
     {
         switch (partType)
         {
@@ -853,14 +714,11 @@ public class MechEquipment : MonoBehaviour
     // Loadoutから装備を反映
     //==================================================
 
-    public void ApplyLoadout(
-        MechLoadout loadout)
+    public void ApplyLoadout(MechLoadout loadout)
     {
         if (loadout == null)
         {
-            Debug.LogWarning(
-                "MechLoadoutがnullです。"
-            );
+            Debug.LogWarning("MechLoadoutがnullです。");
 
             return;
         }
@@ -875,65 +733,31 @@ public class MechEquipment : MonoBehaviour
         // Loadoutを現在のものとして保持
         if (MechGameManager.Instance != null)
         {
-            MechGameManager.Instance.CurrentLoadout =
-                loadout;
+            MechGameManager.Instance.CurrentLoadout = loadout;
         }
 
 
-        ApplyLoadoutPart(
-            PartType.Head,
-            loadout.Head
-        );
+        ApplyLoadoutPart(PartType.Head, loadout.Head);
 
-        ApplyLoadoutPart(
-            PartType.Body,
-            loadout.Body
-        );
+        ApplyLoadoutPart(PartType.Body, loadout.Body);
 
-        ApplyLoadoutPart(
-            PartType.Arms,
-            loadout.Arms
-        );
+        ApplyLoadoutPart(PartType.Arms, loadout.Arms);
 
-        ApplyLoadoutPart(
-            PartType.Legs,
-            loadout.Legs
-        );
+        ApplyLoadoutPart(PartType.Legs, loadout.Legs);
 
-        ApplyLoadoutPart(
-            PartType.RightWeapon,
-            loadout.RightWeapon
-        );
+        ApplyLoadoutPart(PartType.RightWeapon, loadout.RightWeapon);
 
-        ApplyLoadoutPart(
-            PartType.LeftWeapon,
-            loadout.LeftWeapon
-        );
+        ApplyLoadoutPart(PartType.LeftWeapon, loadout.LeftWeapon);
 
-        ApplyLoadoutPart(
-            PartType.RightShoulder,
-            loadout.RightShoulder
-        );
+        ApplyLoadoutPart(PartType.RightShoulder, loadout.RightShoulder);
 
-        ApplyLoadoutPart(
-            PartType.LeftShoulder,
-            loadout.LeftShoulder
-        );
+        ApplyLoadoutPart(PartType.LeftShoulder, loadout.LeftShoulder);
 
-        ApplyLoadoutPart(
-            PartType.Booster,
-            loadout.Booster
-        );
+        ApplyLoadoutPart(PartType.Booster, loadout.Booster);
 
-        ApplyLoadoutPart(
-            PartType.FCS,
-            loadout.FCS
-        );
+        ApplyLoadoutPart(PartType.FCS, loadout.FCS);
 
-        ApplyLoadoutPart(
-            PartType.Generator,
-            loadout.Generator
-        );
+        ApplyLoadoutPart(PartType.Generator, loadout.Generator);
 
 
         // 全パーツを読み込んだ後に一度だけ更新
@@ -944,31 +768,19 @@ public class MechEquipment : MonoBehaviour
     }
 
 
-    private void ApplyLoadoutPart(
-        PartType partType,
-        MechPartData part)
+    private void ApplyLoadoutPart(PartType partType, MechPartData part)
     {
         if (part == null)
         {
             return;
         }
 
-        EquipPart(
-            partType,
-            part
-        );
+        EquipPart(partType, part);
 
 
-        int index =
-            FindPartIndex(
-                partType,
-                part
-            );
+        int index = FindPartIndex(partType, part);
 
-        SetCurrentIndex(
-            partType,
-            index
-        );
+        SetCurrentIndex(partType, index);
     }
 
 
@@ -976,12 +788,9 @@ public class MechEquipment : MonoBehaviour
     // Database内からIndexを検索
     //==================================================
 
-    private int FindPartIndex(
-        PartType partType,
-        MechPartData part)
+    private int FindPartIndex(PartType partType, MechPartData part)
     {
-        MechPartData[] parts =
-            database.GetParts(partType);
+        MechPartData[] parts = database.GetParts(partType);
 
         if (parts == null)
         {
@@ -1006,60 +815,27 @@ public class MechEquipment : MonoBehaviour
 
     public void SaveParts()
     {
-        PlayerPrefs.SetInt(
-            "Head",
-            currentHeadIndex
-        );
+        PlayerPrefs.SetInt("Head", currentHeadIndex);
 
-        PlayerPrefs.SetInt(
-            "Body",
-            currentBodyIndex
-        );
+        PlayerPrefs.SetInt("Body", currentBodyIndex);
 
-        PlayerPrefs.SetInt(
-            "Arms",
-            currentArmsIndex
-        );
+        PlayerPrefs.SetInt("Arms", currentArmsIndex);
 
-        PlayerPrefs.SetInt(
-            "Legs",
-            currentLegsIndex
-        );
+        PlayerPrefs.SetInt("Legs", currentLegsIndex);
 
-        PlayerPrefs.SetInt(
-            "RightWeapon",
-            currentRightWeaponIndex
-        );
+        PlayerPrefs.SetInt("RightWeapon", currentRightWeaponIndex);
 
-        PlayerPrefs.SetInt(
-            "LeftWeapon",
-            currentLeftWeaponIndex
-        );
+        PlayerPrefs.SetInt("LeftWeapon", currentLeftWeaponIndex);
 
-        PlayerPrefs.SetInt(
-            "RightShoulder",
-            currentRightShoulderIndex
-        );
+        PlayerPrefs.SetInt("RightShoulder", currentRightShoulderIndex);
 
-        PlayerPrefs.SetInt(
-            "LeftShoulder",
-            currentLeftShoulderIndex
-        );
+        PlayerPrefs.SetInt("LeftShoulder", currentLeftShoulderIndex);
 
-        PlayerPrefs.SetInt(
-            "Booster",
-            currentBoosterIndex
-        );
+        PlayerPrefs.SetInt("Booster", currentBoosterIndex);
 
-        PlayerPrefs.SetInt(
-            "FCS",
-            currentFCSIndex
-        );
+        PlayerPrefs.SetInt("FCS", currentFCSIndex);
 
-        PlayerPrefs.SetInt(
-            "Generator",
-            currentGeneratorIndex
-        );
+        PlayerPrefs.SetInt("Generator", currentGeneratorIndex);
 
         PlayerPrefs.Save();
     }
@@ -1071,60 +847,27 @@ public class MechEquipment : MonoBehaviour
 
     public void LoadParts()
     {
-        ChangePart(
-            PartType.Head,
-            PlayerPrefs.GetInt("Head", 0)
-        );
+        ChangePart(PartType.Head, PlayerPrefs.GetInt("Head", 0));
 
-        ChangePart(
-            PartType.Body,
-            PlayerPrefs.GetInt("Body", 0)
-        );
+        ChangePart(PartType.Body, PlayerPrefs.GetInt("Body", 0));
 
-        ChangePart(
-            PartType.Arms,
-            PlayerPrefs.GetInt("Arms", 0)
-        );
+        ChangePart(PartType.Arms, PlayerPrefs.GetInt("Arms", 0));
 
-        ChangePart(
-            PartType.Legs,
-            PlayerPrefs.GetInt("Legs", 0)
-        );
+        ChangePart(PartType.Legs, PlayerPrefs.GetInt("Legs", 0));
 
-        ChangePart(
-            PartType.RightWeapon,
-            PlayerPrefs.GetInt("RightWeapon", 0)
-        );
+        ChangePart(PartType.RightWeapon, PlayerPrefs.GetInt("RightWeapon", 0));
 
-        ChangePart(
-            PartType.LeftWeapon,
-            PlayerPrefs.GetInt("LeftWeapon", 0)
-        );
+        ChangePart(PartType.LeftWeapon, PlayerPrefs.GetInt("LeftWeapon", 0));
 
-        ChangePart(
-            PartType.RightShoulder,
-            PlayerPrefs.GetInt("RightShoulder", 0)
-        );
+        ChangePart(PartType.RightShoulder, PlayerPrefs.GetInt("RightShoulder", 0));
 
-        ChangePart(
-            PartType.LeftShoulder,
-            PlayerPrefs.GetInt("LeftShoulder", 0)
-        );
+        ChangePart(PartType.LeftShoulder, PlayerPrefs.GetInt("LeftShoulder", 0));
 
-        ChangePart(
-            PartType.Booster,
-            PlayerPrefs.GetInt("Booster", 0)
-        );
+        ChangePart(PartType.Booster, PlayerPrefs.GetInt("Booster", 0));
 
-        ChangePart(
-            PartType.FCS,
-            PlayerPrefs.GetInt("FCS", 0)
-        );
+        ChangePart(PartType.FCS, PlayerPrefs.GetInt("FCS", 0));
 
-        ChangePart(
-            PartType.Generator,
-            PlayerPrefs.GetInt("Generator", 0)
-        );
+        ChangePart(PartType.Generator, PlayerPrefs.GetInt("Generator", 0));
     }
 
 
@@ -1144,8 +887,7 @@ public class MechEquipment : MonoBehaviour
     }
     public MechTotalStats CalculateTotalStats()
     {
-        MechTotalStats stats =
-            new MechTotalStats();
+        MechTotalStats stats = new MechTotalStats();
 
 
         //==============================
@@ -1156,18 +898,16 @@ public class MechEquipment : MonoBehaviour
         {
             stats.weight += head.weight;
             stats.energy += head.energyConsumption;
+            stats.armor += head.armorPoint;
+            stats.stability += head.headStabilityPerformance;
+            stats.meleeAptitude += head.headMeleeWeaponAptitude;
 
-            stats.scanRange =
-                Mathf.Max(
-                    stats.scanRange,
-                    head.scanRange
-                );
+            // stats.armorPoint = Mathf.Max(stats.armorPoint, head.armorPoint);
+            // stats.headStabilityPerformance = Mathf.Max(stats.headStabilityPerformance, head.headStabilityPerformance);
+            // stats.headMeleeWeaponAptitude = Mathf.Max(stats.headMeleeWeaponAptitude, head.headMeleeWeaponAptitude);
+            stats.scanRange = Mathf.Max(stats.scanRange, head.scanRange);
+            stats.lockDistance = Mathf.Max(stats.lockDistance, head.lockDistance);
 
-            stats.lockDistance =
-                Mathf.Max(
-                    stats.lockDistance,
-                    head.lockDistance
-                );
         }
 
 
@@ -1179,18 +919,14 @@ public class MechEquipment : MonoBehaviour
         {
             stats.weight += body.weight;
             stats.energy += body.energyConsumption;
+            stats.armor += body.armorPoint;
+            stats.stability += body.bodyStabilityPerformance;
+            stats.meleeAptitude += body.bodyMeleeWeaponAptitude;
 
-            stats.scanRange =
-                Mathf.Max(
-                    stats.scanRange,
-                    body.scanRange
-                );
+            // stats.armorPoint = Mathf.Max(stats.armorPoint, body.armorPoint);
+            // stats.bodyStabilityPerformance = Mathf.Max(stats.bodyStabilityPerformance, body.bodyStabilityPerformance);
+            // stats.bodyMeleeWeaponAptitude = Mathf.Max(stats.bodyMeleeWeaponAptitude, body.bodyMeleeWeaponAptitude);
 
-            stats.lockDistance =
-                Mathf.Max(
-                    stats.lockDistance,
-                    body.lockDistance
-                );
         }
 
 
@@ -1202,18 +938,21 @@ public class MechEquipment : MonoBehaviour
         {
             stats.weight += arms.weight;
             stats.energy += arms.energyConsumption;
+            stats.armor += arms.armorPoint;
+            stats.stability += arms.armStabilityPerformance;
+            stats.meleeAptitude += arms.armMeleeWeaponAptitude;
 
-            stats.scanRange =
-                Mathf.Max(
-                    stats.scanRange,
-                    arms.scanRange
-                );
+            stats.recoilReduction = arms.recoilReduction;
+            stats.armMobility = arms.armMobility;
+            stats.aimingPerformance = arms.aimingPerformance;
+            // stats.armorPoint = Mathf.Max(stats.armorPoint, arms.armorPoint);
+            // stats.recoilReduction = Mathf.Max(stats.recoilReduction, arms.recoilReduction);
+            // stats.armMobility = Mathf.Max(stats.armMobility, arms.armMobility);
+            // stats.armStabilityPerformance = Mathf.Max(stats.armStabilityPerformance, arms.armStabilityPerformance);
+            // stats.aimingPerformance = Mathf.Max(stats.aimingPerformance, arms.aimingPerformance);
+            // stats.armMeleeWeaponAptitude = Mathf.Max(stats.armMeleeWeaponAptitude, arms.armMeleeWeaponAptitude);
 
-            stats.lockDistance =
-                Mathf.Max(
-                    stats.lockDistance,
-                    arms.lockDistance
-                );
+
         }
 
 
@@ -1225,15 +964,16 @@ public class MechEquipment : MonoBehaviour
         {
             stats.weight += legs.weight;
             stats.energy += legs.energyConsumption;
+            stats.armor += legs.armorPoint;
+            stats.stability += legs.legStabilityPerformance;
+            stats.meleeAptitude += legs.legMeleeWeaponAptitude;
 
-            stats.moveSpeed =
-                legs.moveSpeed;
 
-            stats.jumpForce =
-                legs.jumpForce;
+            stats.moveSpeed = legs.moveSpeed;
+            stats.jumpForce = legs.jumpForce;
+            stats.jumpPerformance = legs.jumpPerformance;
+            stats.groundMultiplier = legs.groundMultiplier;
 
-            stats.jumpPerformance =
-                legs.jumpPerformance;
         }
 
 
@@ -1246,14 +986,9 @@ public class MechEquipment : MonoBehaviour
             stats.weight += booster.weight;
             stats.energy += booster.energyConsumption;
 
-            stats.boostForce =
-                booster.boostForce;
-
-            stats.boostEfficiency =
-                booster.boostEfficiency;
-
-            stats.boostEnergyCost =
-                booster.boostCost;
+            stats.boostForce = booster.boostForce;
+            stats.boostEfficiency = booster.boostEfficiency;
+            stats.boostEnergyCost = booster.boostCost;
         }
 
 
@@ -1261,25 +996,13 @@ public class MechEquipment : MonoBehaviour
         // Weapons
         //==============================
 
-        AddWeaponStats(
-            rightWeapon,
-            stats
-        );
+        AddWeaponStats(rightWeapon, stats);
 
-        AddWeaponStats(
-            leftWeapon,
-            stats
-        );
+        AddWeaponStats(leftWeapon, stats);
 
-        AddWeaponStats(
-            rightShoulder,
-            stats
-        );
+        AddWeaponStats(rightShoulder, stats);
 
-        AddWeaponStats(
-            leftShoulder,
-            stats
-        );
+        AddWeaponStats(leftShoulder, stats);
 
 
         //==============================
@@ -1290,6 +1013,9 @@ public class MechEquipment : MonoBehaviour
         {
             stats.weight += FCS.weight;
             stats.energy += FCS.energyConsumption;
+            stats.lockRange = FCS.lockRange;
+            stats.lockSpeed = FCS.lockSpeed;
+            stats.lockRadius = FCS.lockRadius;
         }
 
 
@@ -1308,23 +1034,59 @@ public class MechEquipment : MonoBehaviour
     }
     public MechTotalStats CalculateStatsFromLoadout(MechLoadout loadout)
     {
-        MechTotalStats stats =
-            new MechTotalStats();
+        MechTotalStats stats = new MechTotalStats();
 
         if(loadout.Head != null)
         {
             stats.weight += loadout.Head.weight;
             stats.energy += loadout.Head.energyConsumption;
+            stats.armor += loadout.Head.armorPoint;
+            stats.stability += loadout.Head.headStabilityPerformance;
+            stats.meleeAptitude += loadout.Head.headMeleeWeaponAptitude;
 
-            stats.scanRange =
-                Mathf.Max(
-                    stats.scanRange,
-                    loadout.Head.scanRange);
+            stats.scanRange = Mathf.Max(stats.scanRange, loadout.Head.scanRange);
+            stats.lockDistance = Mathf.Max(stats.lockDistance, loadout.Head.lockDistance);
+        }
 
-            stats.lockDistance =
-                Mathf.Max(
-                    stats.lockDistance,
-                    loadout.Head.lockDistance);
+        if (loadout.Body != null)
+        {
+            stats.weight += loadout.Body.weight;
+            stats.energy += loadout.Body.energyConsumption;
+            stats.armor += loadout.Body.armorPoint;
+            stats.stability += loadout.Body.bodyStabilityPerformance;
+            stats.meleeAptitude += loadout.Body.bodyMeleeWeaponAptitude;
+        }
+
+        if (loadout.Arms != null)
+        {
+            stats.weight += loadout.Arms.weight;
+            stats.energy += loadout.Arms.energyConsumption;
+            stats.armor += loadout.Arms.armorPoint;
+            stats.stability += loadout.Arms.armStabilityPerformance;
+            stats.meleeAptitude += loadout.Arms.armMeleeWeaponAptitude;
+
+            stats.armorPoint = Mathf.Max(stats.armorPoint, arms.armorPoint);
+            stats.recoilReduction = Mathf.Max(stats.recoilReduction, arms.recoilReduction);
+            stats.armMobility = Mathf.Max(stats.armMobility, arms.armMobility);
+            stats.armStabilityPerformance = Mathf.Max(stats.armStabilityPerformance, arms.armStabilityPerformance);
+            stats.aimingPerformance = Mathf.Max(stats.aimingPerformance, arms.aimingPerformance);
+            stats.armMeleeWeaponAptitude = Mathf.Max(stats.armMeleeWeaponAptitude, arms.armMeleeWeaponAptitude);
+        }
+
+        if (loadout.Legs != null)
+        {
+            stats.weight += loadout.Legs.weight;
+            stats.energy += loadout.Legs.energyConsumption;
+            stats.armor += loadout.Legs.armorPoint;
+            stats.stability += loadout.Legs.legStabilityPerformance;
+            stats.meleeAptitude += loadout.Legs.legMeleeWeaponAptitude;
+
+
+            stats.moveSpeed = loadout.Legs.moveSpeed;
+            stats.jumpForce = loadout.Legs.jumpForce;
+            stats.jumpPerformance = loadout.Legs.jumpPerformance;
+            stats.groundMultiplier = loadout.Legs.groundMultiplier;
+
         }
 
         return stats;

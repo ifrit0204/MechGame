@@ -7,6 +7,9 @@ public class MechPartInfoUI : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private Text nameText;
+    [SerializeField] private Text armorPointText;
+    [SerializeField] private Text stabilityPerformanceText;
+    [SerializeField] private Text meleeWeaponAptitudeText;
     [SerializeField] private Text weightText;
     [SerializeField] private Text energyText;
 
@@ -35,16 +38,19 @@ public class MechPartInfoUI : MonoBehaviour
             nameText.text = part.partName;
         }
 
+        // if (armorPointText != null)
+        // {
+        //     armorPointText.text = "AP : " + part.armorPoint.ToString("0");
+        // }
+
         if (weightText != null)
         {
-            weightText.text =
-                "WEIGHT : " + part.weight.ToString("0");
+            weightText.text = "WEIGHT : " + part.weight.ToString("0");
         }
 
         if (energyText != null)
         {
-            energyText.text =
-                "EN : " + part.energyConsumption.ToString("0");
+            energyText.text = "EN : " + part.energyConsumption.ToString("0");
         }
 
         statText.text = "";
@@ -55,31 +61,45 @@ public class MechPartInfoUI : MonoBehaviour
         // }
         if(part is MechHeadPartData head)
         {
-            MechHeadPartData current =
-                equipment != null ?
-                equipment.head :
-                null;
+            MechHeadPartData current = equipment != null ? equipment.head : null;
 
-            float scanDiff =
-                head.scanRange -
-                (current != null ?
-                current.scanRange : 0);
+            float armorPointDiff = head.armorPoint - (current != null ? current.armorPoint : 0);
+            float stabilityPerformanceDiff = head.headStabilityPerformance - (current != null ? current.headStabilityPerformance : 0);
+            float meleeWeaponAptitudeDiff = head.headMeleeWeaponAptitude - (current != null ? current.headMeleeWeaponAptitude : 0);
+            float scanDiff = head.scanRange - (current != null ? current.scanRange : 0);
+            float lockDiff = head.lockDistance - (current != null ? current.lockDistance : 0);
 
-            float lockDiff =
-                head.lockDistance -
-                (current != null ?
-                current.lockDistance : 0);
 
             statText.supportRichText = true;
 
+        statText.text = $"SCAN RANGE : {head.scanRange} {DiffText(scanDiff)}\n" + $"LOCK DISTANCE : {head.lockDistance} {DiffText(lockDiff)}" + $"Armor Point : {head.armorPoint} {DiffText(armorPointDiff)}\n" + $"Stability Performance : {head.headStabilityPerformance} {DiffText(stabilityPerformanceDiff)}\n" + $"Head Melee Weapon Aptitude : {head.headMeleeWeaponAptitude} {DiffText(meleeWeaponAptitudeDiff)}";
+        }
+
+        else if (part is MechBodyPartData body)
+        {
+            MechBodyPartData current = equipment.body;
+
             statText.text =
-                $"SCAN RANGE : {head.scanRange} {DiffText(scanDiff)}\n" +
-                $"LOCK DISTANCE : {head.lockDistance} {DiffText(lockDiff)}";
+                $"Armor Point : {body.armorPoint}" + DiffText(body.armorPoint - current.armorPoint) + "\n" + 
+                $"Stability Performance : {body.bodyStabilityPerformance}" + DiffText(body.bodyStabilityPerformance - current.bodyStabilityPerformance) + "\n" + 
+                $"Melee Weapon Aptitude : {body.bodyMeleeWeaponAptitude}" + DiffText(body.bodyMeleeWeaponAptitude - current.bodyMeleeWeaponAptitude);
         }
 
         else if(part is MechArmsPartData arms)
         {
-            statText.text = "SCAN RANGE : " + arms.scanRange + "\nLOCK DISTANCE : " + arms.lockDistance;
+            MechArmsPartData current = equipment.arms;
+
+            statText.text =
+                $"Armor Point : {arms.armorPoint}" + DiffText(arms.armorPoint - current.armorPoint) + "\n"
+
+                + $"Recoil Reduction : {arms.recoilReduction}" + DiffText(arms.recoilReduction - current.recoilReduction) + "\n"
+
+                + $"Arm Mobility : {arms.armMobility}" + DiffText(arms.armMobility - current.armMobility) + "\n"
+                    
+                + $"Arm Stability Performance : {arms.armStabilityPerformance}" + DiffText(arms.armStabilityPerformance - current.armStabilityPerformance) + "\n"
+
+                + $"Arm Melee Weapon Aptitude : {arms.armMeleeWeaponAptitude}" + DiffText(arms.armMeleeWeaponAptitude - current.armMeleeWeaponAptitude) + "\n";
+            // statText.text = "Armor Point : " + arms.armorPoint + "\nRecoil Reduction : " + arms.recoilReduction + "\nArm Mobility : " + arms.armMobility + "\nArm Stability Performance : " + arms.armStabilityPerformance + "\nAiming Performance : " + arms.aimingPerformance + "\nArm Melee Weapon Aptitude : " + arms.armMeleeWeaponAptitude;
         }
         // else if(part is MechLegsPartData legs)
         // {
@@ -240,8 +260,7 @@ public class MechPartInfoUI : MonoBehaviour
         if(diff == 0)
             return "";
 
-        string color =
-            diff > 0 ? "lime" : "red";
+        string color = diff > 0 ? "lime" : "red";
 
         return
             $"<color={color}> {diff:+0;-0}</color>";

@@ -209,9 +209,18 @@ public class MechGameManager : MonoBehaviour
         enemyCount = FindObjectsOfType<MechEnemyUnitControl>().Length;
     }
 
+    public void InitializeEnemyCount()
+    {
+        enemyCount = FindObjectsOfType<MechEnemyUnitControl>().Length;
+
+        Debug.Log("敵数 : " + enemyCount);
+    }
+
     public void EnemyDestroyed()
     {
         enemyCount--;
+        Debug.Log("EnemyDestroyed");
+        Debug.Log("残敵数 : " + enemyCount);
         if (enemyCount <= 0)
         {
             MissionClear();

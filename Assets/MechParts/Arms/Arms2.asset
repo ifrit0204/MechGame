@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Arms2
   m_EditorClassIdentifier: 
   partName: Arms2
+  description: "\u8155\u90E8\u6027\u80FD\u306E\u8AAC\u660E\n\u6027\u80FD\u306E\u7279\u5FB4\u306E\u8AAC\u660E"
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}

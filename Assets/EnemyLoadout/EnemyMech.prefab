@@ -1218,6 +1218,9 @@ MonoBehaviour:
   currentHP: 0
   explosionPrefab: {fileID: 5408913939273050752, guid: 3d9eb7b0939901449a476f0f8b97ddda,
     type: 3}
+  veinPickupPrefab: {fileID: 4683553984553394148, guid: 48063c860c6f70a42b781371fe769c31,
+    type: 3}
+  veinValue: 0
 --- !u!114 &-7176750059427139395
 MonoBehaviour:
   m_ObjectHideFlags: 0

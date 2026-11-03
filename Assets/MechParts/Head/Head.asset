@@ -13,29 +13,15 @@ MonoBehaviour:
   m_Name: Head
   m_EditorClassIdentifier: 
   partName: Head
+  description: "\u6700\u521D\u306E\u982D\u90E8\n\u30B9\u30AD\u30E3\u30F3\u8DDD\u96E2\u3068\u30ED\u30C3\u30AF\u8DDD\u96E2\u304C\u4F4E\u3044\u4EE3\u308F\u308A\u306B\u8CA0\u8377\u304C\u4F4E\u3044\n\u8FD1\u63A5\u6B66\u5668\u9069\u6027\u304C\u9AD8\u3081"
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}
   weight: 0
   energyConsumption: 0
   price: 10000
+  armorPoint: 880
+  headStabilityPerformance: 240
+  headMeleeWeaponAptitude: 360
   scanRange: 240
   lockDistance: 240
-  jumpTime: 0
-  jumpTimer: 0
-  boostTime: 0
-  boostTimer: 0
-  boostJumpTime: 0
-  boostJumpTimer: 0
-  boostRechargeTime: 0
-  boostRechargeTimer: 0
-  energyRechargeTime: 0
-  energyRechargeTimer: 0
-  boostEnergy: 0
-  boostEnergyMax: 0
-  boostCost: 0
-  boostJumpCost: 0
-  hyperBoostCost: 0
-  boostEfficiency: 0
-  energyRechargeRate: 0
-  energyRechargeRateBasic: 0

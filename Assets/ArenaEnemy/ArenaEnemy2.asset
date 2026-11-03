@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 000da6a4b4876ab4484947028865e5e5, type: 3}
-  m_Name: ArenaEnemy
+  m_Name: ArenaEnemy2
   m_EditorClassIdentifier: 
-  enemyName: FirstEnemy
-  description: Strong One
-  reward: 10000
+  enemyName: "\u9EC4\u91D1\u306E\u30B8\u30E7\u30F3"
+  description: "\u6A5F\u4F53\u306E\u6027\u80FD\u3060\u3051\u3067\u751F\u304D\u6B8B\u3063\u3066\u304D\u305F\u3068\u8C6A\u8A9E\u3059\u308B\u4E00\u65B9\u3067\n\u5805\u5B9F\u306A\u6226\u6CD5\u306B\u3088\u308A\u76F8\u624B\u3092\u4E00\u65B9\u7684\u306B\u53E9\u304D\u6F70\u3059"
+  reward: 30000
   loadout: {fileID: 11400000, guid: 3dbedbd8ee5fca748b38e42dea115a21, type: 2}
+  arenaRank: 28
