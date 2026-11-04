@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class ShopConfirmDialogUI : MonoBehaviour
+public class MechShopConfirmDialogUI : MonoBehaviour
 {
     // [SerializeField] private GameObject gameObject;
 
@@ -14,6 +14,7 @@ public class ShopConfirmDialogUI : MonoBehaviour
     [SerializeField] private Button noButton;
 
     private Action onConfirm;
+    public System.Action OnClosed;
 
     private void Start()
     {
@@ -38,14 +39,23 @@ public class ShopConfirmDialogUI : MonoBehaviour
     private void OnYes()
     {
         onConfirm?.Invoke();
-
-        Hide();
     }
+
+    // private void OnYes()
+    // {
+    //     onConfirm?.Invoke();
+
+    //     Hide();
+    // }
 
     public void Hide()
     {
         gameObject.SetActive(false);
 
         onConfirm = null;
+
+        EventSystem.current.SetSelectedGameObject(null);
+
+        OnClosed?.Invoke();
     }
 }

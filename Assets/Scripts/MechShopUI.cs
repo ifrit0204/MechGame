@@ -21,8 +21,9 @@ public class MechShopUI : MonoBehaviour
     [SerializeField] private Button buyModeButton;
     [SerializeField] private Button sellModeButton;
 
-    [SerializeField] private ShopConfirmDialogUI confirmDialog;
+    [SerializeField] private MechShopConfirmDialogUI confirmDialog;
     [SerializeField] private MechGarageMenuUI garageMenu;
+    private bool isShowingConfirm;
 
     private void Start()
     {
@@ -37,9 +38,14 @@ public class MechShopUI : MonoBehaviour
         // RefreshCredits();
 
         partListUI.OnPartSelected += OnPartSelected;
+        confirmDialog.OnClosed += () =>
+        {
+            isShowingConfirm = false;
+        };
     }
     private void OnPartSelected(MechPartData part)
     {
+        Debug.Log("Part Selected : " + part.partName);
         if(currentMode == ShopMode.Buy)
         {
             ShowBuyConfirm(part);
@@ -51,6 +57,13 @@ public class MechShopUI : MonoBehaviour
     }
     private void ShowBuyConfirm(MechPartData part)
     {
+        Debug.Log("ShowBuyConfirm");
+        if(isShowingConfirm)
+            return;
+
+        isShowingConfirm = true;
+        // garageMenu.ChangeState(GarageState.ShopConfirm);
+
         confirmDialog.Show(
             $"【購入確認】\n{part.partName}\n{part.price} C\n購入しますか？",
             () =>
@@ -58,21 +71,30 @@ public class MechShopUI : MonoBehaviour
                 bool success =
                     MechGameManager.Instance.BuyPart(part);
 
+                // garageMenu.GoBack();
+
                 if(success)
                 {
                     // RefreshCredits();
                     partListUI.Refresh();
                 }
+                isShowingConfirm = false;
+                confirmDialog.Hide();
+
             });
     }
     private void ShowSellConfirm(MechPartData part)
     {
+        // garageMenu.ChangeState(GarageState.ShopConfirm);
+
         confirmDialog.Show(
             $"【売却確認】\n{part.partName}\n{part.price} C\n売却しますか？",
             () =>
             {
                 bool success =
                     MechGameManager.Instance.SellPart(part);
+
+                garageMenu.GoBack();
 
                 if(success)
                 {
@@ -94,8 +116,7 @@ public class MechShopUI : MonoBehaviour
 
     private void ExecuteBuy()
     {
-        MechPartData part =
-            partListUI.SelectedPart;
+        MechPartData part = partListUI.SelectedPart;
 
         if(part == null)
             return;
@@ -118,8 +139,7 @@ public class MechShopUI : MonoBehaviour
     }
     private void ExecuteSell()
     {
-        MechPartData part =
-            partListUI.SelectedPart;
+        MechPartData part = partListUI.SelectedPart;
 
         if(part == null)
             return;
@@ -178,6 +198,9 @@ public class MechShopUI : MonoBehaviour
     // }
     public void OpenBuyMode()
     {
+        confirmDialog.Hide();
+        partListUI.ClearSelection();
+
         Debug.Log("Buy Click");
         
         currentMode = ShopMode.Buy;
@@ -198,6 +221,9 @@ public class MechShopUI : MonoBehaviour
     }
     public void OpenSellMode()
     {
+        confirmDialog.Hide();
+        partListUI.ClearSelection();
+        
         Debug.Log("Sell Click");
 
         currentMode = ShopMode.Sell;

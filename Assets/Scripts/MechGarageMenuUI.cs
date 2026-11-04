@@ -15,6 +15,7 @@ public class MechGarageMenuUI : MonoBehaviour
     [SerializeField] private GameObject shopPartListPanel;
     [SerializeField] private GameObject statsPanel;
     [SerializeField] private GameObject arenaPanel;
+    // [SerializeField] private GameObject confirmDialogPanel;
 
     [Header("Buttons")]
     [SerializeField] private Button assemblyButton;
@@ -28,6 +29,7 @@ public class MechGarageMenuUI : MonoBehaviour
     [SerializeField] private MechShopUI shopUI;
     [SerializeField] private MechMissionSelectUI missionUI;
     [SerializeField] private MechArenaSelectUI arenaUI;
+    [SerializeField] private MechShopConfirmDialogUI confirmDialogUI;
 
     private Stack<GarageState> stateHistory = new Stack<GarageState>();
 
@@ -110,6 +112,17 @@ public class MechGarageMenuUI : MonoBehaviour
 
         if(stateHistory.Count == 0)
             return;
+        
+        // if(CurrentState == GarageState.ShopConfirm)
+        // {
+        //     confirmDialogUI.Hide();
+
+        //     CurrentState = stateHistory.Pop();
+
+        //     RefreshPanels();
+
+        //     return;
+        // }
 
         // if(CurrentState == GarageState.PartList)
         // {
@@ -126,7 +139,14 @@ public class MechGarageMenuUI : MonoBehaviour
         if(CurrentState == GarageState.ShopPartList)
         {
             shopPartListPanel.SetActive(false);
+
+            FindFirstObjectByType<MechShopPartListUI>().ClearSelection();
         }
+        // if(CurrentState == GarageState.ShopConfirm)
+        // {
+        //     confirmDialogUI.Hide();
+        // }
+
 
         CurrentState = stateHistory.Pop();
 
@@ -158,6 +178,8 @@ public class MechGarageMenuUI : MonoBehaviour
         shopCategoryPanel.SetActive(false);
         shopPartListPanel.SetActive(false);
         statsPanel.SetActive(false);
+        // confirmDialogPanel.SetActive(false);
+
 
         switch(CurrentState)
         {
@@ -202,6 +224,15 @@ public class MechGarageMenuUI : MonoBehaviour
                 statsPanel.SetActive(true);
 
                 break;
+
+            // case GarageState.ShopConfirm:
+
+            //     shopPartListPanel.SetActive(true);
+            //     statsPanel.SetActive(true);
+
+            //     confirmDialogPanel.SetActive(true);
+
+            //     break;
 
             case GarageState.Mission:
 

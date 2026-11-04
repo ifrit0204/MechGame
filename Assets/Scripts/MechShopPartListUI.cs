@@ -120,6 +120,8 @@ public class MechShopPartListUI : MonoBehaviour
     // }
     private void SelectPart(MechPartData part)
     {
+        Debug.Log("SelectPart : " + part.partName);
+        
         SelectedPart = part;
 
         if(infoUI != null)
