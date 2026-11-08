@@ -114,20 +114,20 @@ public class MechShopCategoryUI : MonoBehaviour
     {
         switch (type)
         {
-            case PartType.Head: return "HEAD";
-            case PartType.Body: return "BODY";
-            case PartType.Arms: return "ARMS";
-            case PartType.Legs: return "LEGS";
+            case PartType.Head: return "Head";
+            case PartType.Body: return "Body";
+            case PartType.Arms: return "Arms";
+            case PartType.Legs: return "Legs";
 
-            case PartType.RightWeapon: return "R WEAPON";
-            case PartType.LeftWeapon: return "L WEAPON";
+            case PartType.RightWeapon: return "R Arm Weapon";
+            case PartType.LeftWeapon: return "L Arm Weapon";
 
-            case PartType.RightShoulder: return "R SHOULDER";
-            case PartType.LeftShoulder: return "L SHOULDER";
+            case PartType.RightShoulder: return "R Shoulder";
+            case PartType.LeftShoulder: return "L Shoulder";
 
-            case PartType.Booster: return "BOOSTER";
+            case PartType.Booster: return "Booster";
             case PartType.FCS: return "FCS";
-            case PartType.Generator: return "GENERATOR";
+            case PartType.Generator: return "Generator";
         }
 
         return "";

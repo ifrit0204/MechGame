@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class MechArenaBattleSpawner : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject enemyMechPrefab;
+    [SerializeField] private GameObject enemyMechPrefab;
 
     private void Start()
     {
@@ -23,7 +22,46 @@ public class MechArenaBattleSpawner : MonoBehaviour
 
         MechEquipment equipment = enemy.GetComponent<MechEquipment>();
 
+        enemy.GetComponent<MechEnemyWeapon>().SetWeapon(enemyData.loadout.RightWeapon);
+
         ApplyEnemyLoadout(equipment, enemyData.loadout);
+
+        Debug.Log(equipment.currentRightWeapon);
+
+        GameObject weaponObj = equipment.currentRightWeapon;
+
+        if (weaponObj == null)
+        {
+            Debug.LogError("currentRightWeapon is null");
+
+            return;
+        }
+
+        Debug.Log(enemyData.loadout.RightWeapon);
+
+        // Transform muzzle = weaponObj.transform.Find(weaponData.muzzleName);
+
+        // Transform muzzle = weaponObj.transform.Find("Muzzle");
+
+        Transform muzzle = weaponObj.transform;
+
+        enemy.GetComponent<MechEnemyWeapon>().SetMuzzle(weaponObj.transform);
+
+        Debug.Log("Muzzle = " + muzzle);
+
+        Debug.Log(muzzle);
+
+        enemy.GetComponent<MechEnemyWeapon>().SetMuzzle(muzzle);
+
+        Debug.Log(weaponObj);
+
+        // Debug.Log(weaponObj.GetComponent<MechWeaponModel>());
+
+        // MechWeaponModel model = weaponObj.GetComponent<MechWeaponModel>();
+
+        // enemy.GetComponent<MechEnemyWeapon>().SetMuzzle(model.muzzle);
+        
+        enemy.GetComponent<MechStatsControl>().RefreshStats();
     }
 
     private void ApplyEnemyLoadout(MechEquipment equipment, MechEnemyLoadout loadout)

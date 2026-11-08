@@ -693,7 +693,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d819d645ac182db4196f0ebf42bba9e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combatDistance: 20
+  combatDistance: 120
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
+  alertTimer: 0
+  alertTime: 0
 --- !u!54 &151095195
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -735,11 +738,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 100
   currentHP: 0
+  armorPoint: 0
   explosionPrefab: {fileID: 5408913939273050752, guid: 3d9eb7b0939901449a476f0f8b97ddda,
     type: 3}
   veinPickupPrefab: {fileID: 4683553984553394148, guid: 48063c860c6f70a42b781371fe769c31,
     type: 3}
   veinValue: 1
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
+  team: 1
 --- !u!114 &151095197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -752,9 +758,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d848b39ff2839ad42a47ac85ffed3969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  muzzle: {fileID: 151095193}
   bulletPrefab: {fileID: 598417222192524591, guid: e6fa51a6dbbb63c4eb5884154e01bc41,
     type: 3}
+  weaponData: {fileID: 0}
 --- !u!114 &151095198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -767,8 +773,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90fe41e6c68906a46badd2b39e0e2ae3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectDistance: 50
+  detectDistance: 300
   viewAngle: 120
+  sensorPoint: {fileID: 151095193}
+  offsetY: 12
+  offsetZ: 12
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
 --- !u!114 &151095199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -781,7 +791,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 946d88ebf4b23834d86625d67bd4718d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 24
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
 --- !u!114 &151095200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -881,11 +892,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 100
   currentHP: 0
+  armorPoint: 0
   explosionPrefab: {fileID: 5408913939273050752, guid: 3d9eb7b0939901449a476f0f8b97ddda,
     type: 3}
   veinPickupPrefab: {fileID: 4683553984553394148, guid: 48063c860c6f70a42b781371fe769c31,
     type: 3}
   veinValue: 1
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
+  team: 1
 --- !u!114 &298226745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -898,7 +912,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d819d645ac182db4196f0ebf42bba9e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combatDistance: 20
+  combatDistance: 120
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
+  alertTimer: 0
+  alertTime: 0
 --- !u!54 &298226746
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1024,9 +1041,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d848b39ff2839ad42a47ac85ffed3969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  muzzle: {fileID: 298226750}
   bulletPrefab: {fileID: 598417222192524591, guid: e6fa51a6dbbb63c4eb5884154e01bc41,
     type: 3}
+  weaponData: {fileID: 0}
 --- !u!114 &298226752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1039,8 +1056,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90fe41e6c68906a46badd2b39e0e2ae3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectDistance: 50
+  detectDistance: 300
   viewAngle: 120
+  sensorPoint: {fileID: 298226750}
+  offsetY: 12
+  offsetZ: 12
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
 --- !u!114 &298226753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1053,7 +1074,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 946d88ebf4b23834d86625d67bd4718d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 24
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
 --- !u!114 &298226754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11362,11 +11384,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 100
   currentHP: 0
+  armorPoint: 0
   explosionPrefab: {fileID: 5408913939273050752, guid: 3d9eb7b0939901449a476f0f8b97ddda,
     type: 3}
   veinPickupPrefab: {fileID: 4683553984553394148, guid: 48063c860c6f70a42b781371fe769c31,
     type: 3}
   veinValue: 1
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
+  team: 1
 --- !u!114 &976375087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11379,7 +11404,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d819d645ac182db4196f0ebf42bba9e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combatDistance: 20
+  combatDistance: 120
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
+  alertTimer: 0
+  alertTime: 0
 --- !u!54 &976375088
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11505,9 +11533,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d848b39ff2839ad42a47ac85ffed3969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  muzzle: {fileID: 976375092}
   bulletPrefab: {fileID: 598417222192524591, guid: e6fa51a6dbbb63c4eb5884154e01bc41,
     type: 3}
+  weaponData: {fileID: 0}
 --- !u!114 &976375094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11520,8 +11548,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90fe41e6c68906a46badd2b39e0e2ae3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectDistance: 50
+  detectDistance: 300
   viewAngle: 120
+  sensorPoint: {fileID: 976375092}
+  offsetY: 12
+  offsetZ: 12
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
 --- !u!114 &976375095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11534,7 +11566,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 946d88ebf4b23834d86625d67bd4718d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 24
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
 --- !u!114 &976375096
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12236,11 +12269,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 100
   currentHP: 0
+  armorPoint: 0
   explosionPrefab: {fileID: 5408913939273050752, guid: 3d9eb7b0939901449a476f0f8b97ddda,
     type: 3}
   veinPickupPrefab: {fileID: 4683553984553394148, guid: 48063c860c6f70a42b781371fe769c31,
     type: 3}
   veinValue: 1
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
+  team: 1
 --- !u!114 &1766935021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12253,7 +12289,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d819d645ac182db4196f0ebf42bba9e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combatDistance: 20
+  combatDistance: 120
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
+  alertTimer: 1
+  alertTime: 1
 --- !u!54 &1766935022
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12379,9 +12418,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d848b39ff2839ad42a47ac85ffed3969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  muzzle: {fileID: 1766935026}
   bulletPrefab: {fileID: 598417222192524591, guid: e6fa51a6dbbb63c4eb5884154e01bc41,
     type: 3}
+  weaponData: {fileID: 0}
 --- !u!114 &1766935028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12394,8 +12433,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90fe41e6c68906a46badd2b39e0e2ae3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectDistance: 120
+  detectDistance: 300
   viewAngle: 120
+  sensorPoint: {fileID: 1766935026}
+  offsetY: 12
+  offsetZ: 12
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
 --- !u!114 &1766935029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12408,7 +12451,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 946d88ebf4b23834d86625d67bd4718d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 24
+  statsData: {fileID: 11400000, guid: 4d5480eaafdfcf244b7c3bce724fda65, type: 2}
 --- !u!114 &1766935030
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,7 +15,7 @@ MonoBehaviour:
   partName: ArmGun
   description: "\u6700\u521D\u306E\u6B66\u5668\n\u6271\u3044\u3084\u3059\u3044\u304C\u5F31\u3044\u6027\u80FD\n\u4ED6\u306E\u6B66\u5668\u3092\u8CB7\u3044\u305F\u3044\u3068\u601D\u308F\u305B\u308B"
   icon: {fileID: 0}
-  modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
+  modelPrefab: {fileID: 919132149155446097, guid: 3161f80dcf282844cb3fdf748250d93b,
     type: 3}
   weight: 0
   energyConsumption: 0
@@ -26,6 +26,7 @@ MonoBehaviour:
   reloadTime: 0.36
   spread: 0
   ammo: 120
+  muzzleName: Muzzle
   attackTrigger: 
   attackRange: 0
   projectilePrefab: {fileID: 598417222192524591, guid: e6fa51a6dbbb63c4eb5884154e01bc41,

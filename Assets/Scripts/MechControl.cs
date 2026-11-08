@@ -16,6 +16,8 @@ public class MechControl : MonoBehaviour, IDamageable
     public float currentHP;
     public float totalDamageTaken;
 
+    public TeamType team = TeamType.Player;
+    
     [SerializeField] private GameObject explosionPrefab;
 
     // totalDamageTaken += damageData.Damage;
@@ -174,6 +176,8 @@ public class MechControl : MonoBehaviour, IDamageable
         // MechGameManager.Instance.EnemyDestroyed();
 
         Destroy(gameObject);
+
+        SceneManager.LoadScene("ResultScene");
     }
     void Update()
     {

@@ -11,6 +11,7 @@ public abstract class MechWeaponPartData : MechPartData
     public float reloadTime;
     public float spread;
     public int ammo;
+    public string muzzleName;
 
     public string attackTrigger;
     public float attackRange;

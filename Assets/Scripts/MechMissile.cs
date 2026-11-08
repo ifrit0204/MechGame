@@ -1,9 +1,12 @@
+// using System.Collections;
+// using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class MechMissile : MonoBehaviour, IProjectile
 {
     [Header("Damage")]
+    public TeamType team;
     public DamageData damageData;
 
     [Header("Flight")]
@@ -28,14 +31,23 @@ public class MechMissile : MonoBehaviour, IProjectile
     {
         Destroy(gameObject, selfDestroyTime);
     }
-    public void Initialize(DamageData damage, float speed, Transform target)
+    public void Initialize(DamageData damage, float speed, Transform target, TeamType shooterTeam)
     {
         damageData = damage;
 
         moveSpeed = speed;
 
         this.target = target;
+
+        team = shooterTeam;
     }
+    // public void Initialize(DamageData damage, float speed, Transform target, TeamType shooterTeam)
+    // {
+    //     damageData = damage;
+    //     team = shooterTeam;
+
+    //     rb.velocity = transform.forward * speed;
+    // }
 
     // public void Initialize(DamageData data, float speed, Transform targetTransform)
     // {
@@ -104,14 +116,53 @@ public class MechMissile : MonoBehaviour, IProjectile
     //     rb.velocity = nextRotation * Vector3.forward * moveSpeed;
     // }
 
+    // private void OnTriggerEnter(Collider col)
+    // {
+    //     IDamageable damageable = col.GetComponent<IDamageable>();
+
+    //     if (damageable != null)
+    //     {
+    //         damageable.TakeDamage(damageData);
+    //     }
+    //     Destroy(gameObject);
+    // }
+    // private void OnTriggerEnter(Collider col)
+    // {
+    //     TeamMember member = col.GetComponent<TeamMember>();
+
+    //     if(member != null)
+    //     {
+    //         if(member.team == team)
+    //             return;
+    //     }
+
+    //     IDamageable damageable = col.GetComponent<IDamageable>();
+
+    //     if(damageable != null)
+    //     {
+    //         damageable.TakeDamage(damageData);
+    //     }
+
+    //     Destroy(gameObject);
+    // }
     private void OnTriggerEnter(Collider col)
     {
-        IDamageable damageable = col.GetComponent<IDamageable>();
+        TeamMember member = col.GetComponentInParent<TeamMember>();
 
-        if (damageable != null)
+        if(member != null)
         {
+            if(member.team == team)
+                return;
+        }
+
+        IDamageable damageable = col.GetComponentInParent<IDamageable>();
+
+        if(damageable != null)
+        {
+            Debug.Log("Damage!");
             damageable.TakeDamage(damageData);
         }
+
         Destroy(gameObject);
     }
 }

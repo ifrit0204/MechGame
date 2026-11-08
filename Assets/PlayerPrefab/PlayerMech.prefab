@@ -891,6 +891,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 990280320061731464}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d8c5d19d9a05404f9d9c7617165945c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1300397012664943264}
     - targetCorrespondingSourceObject: {fileID: -1397303492462338110, guid: 9d8c5d19d9a05404f9d9c7617165945c,
         type: 3}
       insertIndex: -1
@@ -1266,6 +1270,7 @@ MonoBehaviour:
   moveSpeed: 15000
   jumpForce: 1200
   jumpPerformance: 2400
+  groundMultiplier: 0
   boostForce: 1200
   boostFirstForce: 4800
   boostJumpForce: 2400
@@ -1295,6 +1300,12 @@ MonoBehaviour:
   upwardLimit: 360
   upwardVelocity: 0
   gravityVelocity: 0
+  maxHP: 0
+  currentHP: 0
+  totalDamageTaken: 0
+  team: 0
+  explosionPrefab: {fileID: 5408913939273050752, guid: 3d9eb7b0939901449a476f0f8b97ddda,
+    type: 3}
   moveInput: {x: 0, y: 0}
   lookInput: {x: 0, y: 0}
   groundLayer:
@@ -1825,6 +1836,19 @@ MonoBehaviour:
   currentTarget: {fileID: 0}
   lockRange: 500
   lockRadius: 250
+--- !u!114 &1300397012664943264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8101433545972138524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9319fd5f13fb1e5409bd089e266711d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  team: 0
 --- !u!4 &8212743604382150815 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8262137218570104878, guid: 9d8c5d19d9a05404f9d9c7617165945c,

@@ -301,7 +301,7 @@ public class MechAttackAction : MonoBehaviour
 
         if(projectile != null)
         {
-            projectile.Initialize(weapon.damageData, weapon.bulletSpeed, lockOn.currentTarget);
+            projectile.Initialize(weapon.damageData, weapon.bulletSpeed, lockOn.currentTarget, TeamType.Player);
         }
 
         // MechBullet bullet = bulletObj.GetComponent<MechBullet>();
@@ -545,7 +545,7 @@ public class MechAttackAction : MonoBehaviour
 
         if (projectile != null)
         {
-            projectile.Initialize(weapon.chargeDamageData, weapon.bulletSpeed * 1.5f, lockOn.currentTarget);
+            projectile.Initialize(weapon.chargeDamageData, weapon.bulletSpeed * 1.5f, lockOn.currentTarget, TeamType.Player);
         }
     }
     private void ChargeBladeAttack(MechWeaponPartData weapon)

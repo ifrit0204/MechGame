@@ -4,19 +4,58 @@ using UnityEngine;
 
 public class MechEnemyUnitControl : MonoBehaviour, IDamageable
 {
-    public float maxHP = 100;
+    public float maxHP;
     public float currentHP;
+    public float armorPoint;
     [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private GameObject veinPickupPrefab;
     [SerializeField] private float veinValue;
+    [SerializeField] private MechEnemyStatsData statsData;
     private bool isDead;
     private MechEnemyBlackboard blackboard;
+    public TeamType team = TeamType.Enemy;
+
+    private MechStatsControl statsControl;
+
+    // private MechEquipment equipment;
+    // private MechTotalStats stats;
+
+    void Awake()
+    {
+        blackboard = GetComponent<MechEnemyBlackboard>();
+        // blackboard = GetComponent<MechEnemyBlackboard>();
+
+        statsControl = GetComponent<MechStatsControl>();
+        // equipment = GetComponent<MechEquipment>();
+    }
+
     void Start()
     {
         isDead = false;
-        // MechGameManager.Instance.enemyCount++;
+
+        if (statsData != null)
+        {
+            maxHP = statsData.maxHP;
+        }
+        else
+        {
+            if(statsControl == null)
+            {
+                Debug.LogError("StatsControl Null");
+                return;
+            }
+
+            if(statsControl.CurrentStats == null)
+            {
+                Debug.LogError("CurrentStats Null");
+                return;
+            }
+
+            maxHP = statsControl.CurrentStats.armor;
+        }
+
         currentHP = maxHP;
-        blackboard = GetComponent<MechEnemyBlackboard>();
+
         blackboard.CurrentHP = currentHP;
     }
     public void TakeDamage(DamageData damageData)

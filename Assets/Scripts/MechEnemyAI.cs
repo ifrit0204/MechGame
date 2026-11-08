@@ -2,12 +2,17 @@ using UnityEngine;
 
 public enum AIState
 {
-    Idle, Chase, Combat
+    Idle, Patrol, Alert, Chase, Combat, Search
 }
+// public enum AIState
+// {
+//     Patrol, Alert, Chase, Combat, Search
+// }
 
 public class MechEnemyAI : MonoBehaviour
 {
-    [SerializeField] float combatDistance = 20f;
+    [SerializeField] float combatDistance;
+    [SerializeField] private MechEnemyStatsData statsData;
 
     AIState state;
 
@@ -21,8 +26,13 @@ public class MechEnemyAI : MonoBehaviour
 
         set => blackboard.Target = value;
     }
-
+    // private MechEquipment equipment;
+    // private MechTotalStats stats;
+    private MechStatsControl statsControl;
     private MechEnemyBlackboard blackboard;
+
+    [SerializeField] private float alertTimer;
+    [SerializeField] private float alertTime;
 
     private void Awake()
     {
@@ -31,15 +41,55 @@ public class MechEnemyAI : MonoBehaviour
         movement = GetComponent<MechEnemyMovement>();
         weapon = GetComponent<MechEnemyWeapon>();
 
+        // equipment = GetComponent<MechEquipment>();
+        statsControl = GetComponent<MechStatsControl>();
+
         state = AIState.Idle;
+    }
+
+    private void Start()
+    {
+        if (statsData != null)
+        {
+            combatDistance = statsData.combatDistance;
+        }
+        else
+        {
+            if (statsControl == null)
+            {
+                Debug.LogError("StatsControl Null");
+                return;
+            }
+
+            if (statsControl.CurrentStats == null)
+            {
+                Debug.LogError("CurrentStats Null");
+                return;
+            }
+
+            combatDistance = statsControl.CurrentStats.lockRange;
+        }
+        
+
+        alertTimer = alertTime;
     }
 
     private void Update()
     {
+        Debug.Log(state);
+        
         switch (state)
         {
             case AIState.Idle:
                 UpdateIdle();
+                break;
+
+            case AIState.Patrol:
+                UpdatePatrol();
+                break;
+
+            case AIState.Alert:
+                UpdateAlert();
                 break;
 
             case AIState.Chase:
@@ -49,19 +99,46 @@ public class MechEnemyAI : MonoBehaviour
             case AIState.Combat:
                 UpdateCombat();
                 break;
+
+            case AIState.Search:
+                UpdateSearch();
+                break;
         }
     }
 
     void UpdateIdle()
     {
-        if(blackboard.CanSeeTarget)
+        Debug.Log("Idle");
+
+        if (blackboard.CanSeeTarget)
         {
+            Debug.Log("Target Found");
             state = AIState.Chase;
         }
         // if (sensor.CanSeeTarget())
         // {
         //     state = AIState.Chase;
         // }
+    }
+    void UpdatePatrol()
+    {
+        if (blackboard.CanSeeTarget)
+        {
+            state = AIState.Alert;
+        }
+    }
+
+    void UpdateAlert()
+    {
+        if (alertTimer <= 0f)
+        {
+            state = AIState.Chase;
+            alertTimer = alertTime;
+        }
+        else
+        {
+            alertTimer -= Time.deltaTime;
+        }
     }
 
     // void UpdateChase()
@@ -78,6 +155,8 @@ public class MechEnemyAI : MonoBehaviour
     // }
     void UpdateChase()
     {
+        Debug.Log("Chasing");
+
         movement.MoveTowards(blackboard.Target);
 
         if(blackboard.TargetDistance <= combatDistance)
@@ -88,9 +167,33 @@ public class MechEnemyAI : MonoBehaviour
 
     void UpdateCombat()
     {
+        Debug.Log("Combat");
+        
         movement.Strafe(blackboard.Target);
 
         weapon.Fire();
+
+        if (!blackboard.CanSeeTarget)
+        {
+            state = AIState.Search;
+        }
+    }
+    
+    void UpdateSearch()
+    {
+        movement.MovePosition(blackboard.LastKnownPosition);
+
+        float dist = Vector3.Distance(transform.position, blackboard.LastKnownPosition);
+
+        if(dist < 120f)
+        {
+            state = AIState.Patrol;
+        }
+
+        if(blackboard.CanSeeTarget)
+        {
+            state = AIState.Chase;
+        }
     }
 }
 // using System.Collections;

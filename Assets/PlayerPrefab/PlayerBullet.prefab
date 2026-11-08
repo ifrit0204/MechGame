@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2578850862963964797}
   - component: {fileID: 3148556797047744550}
   - component: {fileID: -7408541193494086290}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: PlayerBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,6 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d5a1b1b84a229943a654b60bd911962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  team: 0
   damageData:
     Damage: 0
     Type: 0
