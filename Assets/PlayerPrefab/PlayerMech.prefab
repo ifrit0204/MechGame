@@ -895,6 +895,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1300397012664943264}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d8c5d19d9a05404f9d9c7617165945c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5829590642392106150}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d8c5d19d9a05404f9d9c7617165945c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2782142206362496983}
     - targetCorrespondingSourceObject: {fileID: -1397303492462338110, guid: 9d8c5d19d9a05404f9d9c7617165945c,
         type: 3}
       insertIndex: -1
@@ -1773,6 +1781,12 @@ MonoBehaviour:
   leftPunchDamage: 96
   meleeDashSpeed: 3000
   meleeAttackDistance: 9
+  uppercutHoldTime: 1
+  chargeBulletSpeedRate: 1.5
+  meleeApproachMaxTime: 1.5
+  punchRightTrigger: PunchRight
+  punchLeftTrigger: PunchLeft
+  uppercutTrigger: UpperCut
 --- !u!114 &7788270984161551128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1849,6 +1863,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   team: 0
+--- !u!114 &-5829590642392106150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8101433545972138524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b74a656e3f78314dbc5a29bb2a87c5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-2782142206362496983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8101433545972138524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3562ec915dc65164c8db084c7eefb3ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8212743604382150815 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8262137218570104878, guid: 9d8c5d19d9a05404f9d9c7617165945c,

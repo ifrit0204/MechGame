@@ -23,18 +23,5 @@ public abstract class MechWeaponPartData : MechPartData
     public float chargeTime;
 
     public DamageData chargeDamageData;
-    // public class RifleData : MechWeaponPartData
-    // {
-    //     public float bulletSpeed;
-    // }
-
-    // public class BladeData : MechWeaponPartData
-    // {
-    //     public float attackRange;
-    // }
-
-    // public class MissileData : MechWeaponPartData
-    // {
-    //     public float lockDistance;
-    // }
+    public string chargeAttackTrigger;   // チャージ近接攻撃のトリガー名(空なら attackTrigger を使う)
 }

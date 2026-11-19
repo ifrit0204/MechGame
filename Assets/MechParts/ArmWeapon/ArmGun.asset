@@ -22,7 +22,7 @@ MonoBehaviour:
   price: 10000
   weaponType: 1
   lockDistance: 0
-  bulletSpeed: 120
+  bulletSpeed: 180
   reloadTime: 0.36
   spread: 0
   ammo: 120
@@ -39,3 +39,4 @@ MonoBehaviour:
   chargeDamageData:
     Damage: 72
     Type: 0
+  chargeAttackTrigger: 

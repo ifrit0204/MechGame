@@ -17,3 +17,7 @@ MonoBehaviour:
   reward: 30000
   loadout: {fileID: 11400000, guid: 3dbedbd8ee5fca748b38e42dea115a21, type: 2}
   arenaRank: 28
+  startVoice: {fileID: 8300000, guid: 6705ef09e7b37504593237b5b0c41675, type: 3}
+  startSubtitle: 
+  clearVoice: {fileID: 8300000, guid: 6705ef09e7b37504593237b5b0c41675, type: 3}
+  clearSubtitle: "\u76EE\u6A19\u306E\u6483\u7834\u3092\u78BA\u8A8D\u3002\u30DF\u30C3\u30B7\u30E7\u30F3\u5B8C\u4E86\u3067\u3059\u3002\u5E30\u9084\u3057\u3066\u304F\u3060\u3055\u3044"

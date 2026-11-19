@@ -1055,6 +1055,9 @@ public class MechEquipment : MonoBehaviour
             stats.armor += loadout.Body.armorPoint;
             stats.stability += loadout.Body.bodyStabilityPerformance;
             stats.meleeAptitude += loadout.Body.bodyMeleeWeaponAptitude;
+
+            stats.energyRecharge += loadout.Body.bodyEnergyRecharge;
+            stats.boostEfficiency += loadout.Body.bodyBoostEfficiency;
         }
 
         if (loadout.Arms != null)
@@ -1065,12 +1068,15 @@ public class MechEquipment : MonoBehaviour
             stats.stability += loadout.Arms.armStabilityPerformance;
             stats.meleeAptitude += loadout.Arms.armMeleeWeaponAptitude;
 
-            stats.armorPoint = Mathf.Max(stats.armorPoint, arms.armorPoint);
-            stats.recoilReduction = Mathf.Max(stats.recoilReduction, arms.recoilReduction);
-            stats.armMobility = Mathf.Max(stats.armMobility, arms.armMobility);
-            stats.armStabilityPerformance = Mathf.Max(stats.armStabilityPerformance, arms.armStabilityPerformance);
-            stats.aimingPerformance = Mathf.Max(stats.aimingPerformance, arms.aimingPerformance);
-            stats.armMeleeWeaponAptitude = Mathf.Max(stats.armMeleeWeaponAptitude, arms.armMeleeWeaponAptitude);
+            // stats.armorPoint = Mathf.Max(stats.armorPoint, arms.armorPoint);
+            // stats.recoilReduction = Mathf.Max(stats.recoilReduction, arms.recoilReduction);
+            stats.recoilReduction = loadout.Arms.recoilReduction;
+            stats.armMobility = loadout.Arms.armMobility;
+            stats.aimingPerformance = loadout.Arms.aimingPerformance;
+            // stats.armMobility = Mathf.Max(stats.armMobility, arms.armMobility);
+            // stats.armStabilityPerformance = Mathf.Max(stats.armStabilityPerformance, arms.armStabilityPerformance);
+            // stats.aimingPerformance = Mathf.Max(stats.aimingPerformance, arms.aimingPerformance);
+            // stats.armMeleeWeaponAptitude = Mathf.Max(stats.armMeleeWeaponAptitude, arms.armMeleeWeaponAptitude);
         }
 
         if (loadout.Legs != null)
@@ -1087,6 +1093,42 @@ public class MechEquipment : MonoBehaviour
             stats.jumpPerformance = loadout.Legs.jumpPerformance;
             stats.groundMultiplier = loadout.Legs.groundMultiplier;
 
+        }
+
+        if (loadout.FCS != null)
+        {
+            stats.weight += loadout.FCS.weight;
+            stats.energy += loadout.FCS.energyConsumption;
+
+            stats.lockRange = loadout.FCS.lockRange;
+            stats.lockSpeed = loadout.FCS.lockSpeed;
+            stats.lockRadius = loadout.FCS.lockRadius;
+        }
+
+        if (loadout.Generator != null)
+        {
+            stats.weight += loadout.Generator.weight;
+
+            stats.boostEnergy = loadout.Generator.boostEnergy;
+            stats.boostEnergyMax = loadout.Generator.boostEnergyMax;
+            stats.energyRechargeRate = loadout.Generator.energyRechargeRate;
+            stats.energyRechargeRateBasic = loadout.Generator.energyRechargeRateBasic;
+        }
+
+        if (loadout.Booster != null)
+        {
+            stats.weight += loadout.Booster.weight;
+            stats.energy += loadout.Booster.energyConsumption;
+
+            stats.boostForce = loadout.Booster.boostForce;
+            stats.boostFirstForce = loadout.Booster.boostFirstForce;
+            stats.boostCost = loadout.Booster.boostCost;
+            stats.boostEfficiency = loadout.Booster.boostEfficiency;
+            stats.boostJumpForce = loadout.Booster.boostJumpForce;
+            stats.boostJumpCost = loadout.Booster.boostJumpCost;
+            stats.hyperBoostForce = loadout.Booster.hyperBoostForce;
+            stats.hyperBoostFirstForce = loadout.Booster.hyperBoostFirstForce;
+            stats.hyperBoostCost = loadout.Booster.hyperBoostCost;
         }
 
         return stats;

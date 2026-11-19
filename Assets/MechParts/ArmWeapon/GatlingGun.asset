@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: GatlingGun
   m_EditorClassIdentifier: 
   partName: 
+  description: 
   icon: {fileID: 0}
   modelPrefab: {fileID: 0}
   weight: 0
@@ -23,7 +24,8 @@ MonoBehaviour:
   bulletSpeed: 0
   reloadTime: 0
   spread: 0
-  ammo: 0
+  ammo: 540
+  muzzleName: Muzzle
   attackTrigger: 
   attackRange: 0
   projectilePrefab: {fileID: 0}
@@ -35,3 +37,4 @@ MonoBehaviour:
   chargeDamageData:
     Damage: 0
     Type: 0
+  chargeAttackTrigger: 

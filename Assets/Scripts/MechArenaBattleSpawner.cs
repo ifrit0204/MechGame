@@ -6,12 +6,23 @@ public class MechArenaBattleSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject enemyMechPrefab;
 
-    private void Start()
+    private IEnumerator Start()
     {
-        SpawnEnemy();
+        if (MechGameManager.Instance.CurrentArenaEnemy == null)
+            yield break;
+
+        MechControl player = FindFirstObjectByType<MechControl>();
+
+        while (player == null)
+        {
+            yield return null;
+            player = FindFirstObjectByType<MechControl>();
+        }
+
+        SpawnEnemy(player.transform);
     }
 
-    private void SpawnEnemy()
+    private void SpawnEnemy(Transform playerTarget)
     {
         MechArenaEnemyData enemyData = MechGameManager.Instance.CurrentArenaEnemy;
 
@@ -20,47 +31,36 @@ public class MechArenaBattleSpawner : MonoBehaviour
 
         GameObject enemy = Instantiate(enemyMechPrefab, transform.position, transform.rotation);
 
+        MechEnemyAI enemyAI = enemy.GetComponent<MechEnemyAI>();
+
+        if (enemyAI == null)
+        {
+            Debug.LogError("MechEnemyAI is missing from the enemy prefab.", enemy);
+            Destroy(enemy);
+            return;
+        }
+
+        enemyAI.Target = playerTarget;
+
         MechEquipment equipment = enemy.GetComponent<MechEquipment>();
 
-        enemy.GetComponent<MechEnemyWeapon>().SetWeapon(enemyData.loadout.RightWeapon);
+        MechEnemyWeapon enemyWeapon = enemy.GetComponent<MechEnemyWeapon>();
+        enemyWeapon.SetWeapon(enemyData.loadout.RightWeapon);
 
         ApplyEnemyLoadout(equipment, enemyData.loadout);
-
-        Debug.Log(equipment.currentRightWeapon);
 
         GameObject weaponObj = equipment.currentRightWeapon;
 
         if (weaponObj == null)
         {
-            Debug.LogError("currentRightWeapon is null");
-
-            return;
+            if (enemyData.loadout.RightWeapon != null)
+                Debug.LogError("currentRightWeapon is null", enemy);
+        }
+        else
+        {
+            enemyWeapon.SetMuzzle(weaponObj.transform);
         }
 
-        Debug.Log(enemyData.loadout.RightWeapon);
-
-        // Transform muzzle = weaponObj.transform.Find(weaponData.muzzleName);
-
-        // Transform muzzle = weaponObj.transform.Find("Muzzle");
-
-        Transform muzzle = weaponObj.transform;
-
-        enemy.GetComponent<MechEnemyWeapon>().SetMuzzle(weaponObj.transform);
-
-        Debug.Log("Muzzle = " + muzzle);
-
-        Debug.Log(muzzle);
-
-        enemy.GetComponent<MechEnemyWeapon>().SetMuzzle(muzzle);
-
-        Debug.Log(weaponObj);
-
-        // Debug.Log(weaponObj.GetComponent<MechWeaponModel>());
-
-        // MechWeaponModel model = weaponObj.GetComponent<MechWeaponModel>();
-
-        // enemy.GetComponent<MechEnemyWeapon>().SetMuzzle(model.muzzle);
-        
         enemy.GetComponent<MechStatsControl>().RefreshStats();
     }
 

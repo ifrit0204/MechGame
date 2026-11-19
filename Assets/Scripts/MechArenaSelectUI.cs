@@ -61,7 +61,15 @@ public class MechArenaSelectUI : MonoBehaviour
 
         enemyButtons.Add(button);
 
-        button.onClick.AddListener(() => SelectEnemy(enemy));
+        button.onClick.AddListener(() => {SelectEnemy(enemy); PlaySelectVoice(enemy);});
+    }
+
+    private void PlaySelectVoice(MechArenaEnemyData enemy)
+    {
+        if (MechGameManager.Instance == null)
+            return;
+
+        MechGameManager.Instance.PlayVoiceLine(enemy.selectVoice, enemy.selectSubtitle);
     }
 
     public void SelectFirstEnemy()
@@ -94,10 +102,18 @@ public class MechArenaSelectUI : MonoBehaviour
         if(selectedEnemy == null)
             return;
 
+        MechGameManager.Instance.StopBriefing();
+
         MechGameManager.Instance.StartMissionResult();
 
         MechGameManager.Instance.CurrentArenaEnemy = selectedEnemy;
 
         SceneManager.LoadScene("ArenaScene");
+    }
+
+    private void OnDisable()
+    {
+        if (MechGameManager.Instance != null)
+            MechGameManager.Instance.StopBriefing();
     }
 }

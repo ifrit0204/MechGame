@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class MechEnemySensor : MonoBehaviour
 {
-    // public Transform target;
-
     [SerializeField] private float detectDistance;
 
     [SerializeField] private float viewAngle;
@@ -15,9 +13,19 @@ public class MechEnemySensor : MonoBehaviour
     [SerializeField] private float offsetZ;
     [SerializeField] private MechEnemyStatsData statsData;
 
+    [Header("Player View (敵がプレイヤーに捕捉されているかの推定)")]
+    // プレイヤーのFCS情報が取れないときに使う値
+    [SerializeField] private float fallbackPlayerLockRange = 150f;
+    [SerializeField] private float fallbackPlayerLockAngle = 35f;
+
     private MechEnemyBlackboard blackboard;
     private MechStatsControl statsControl;
     private float lockTimer;
+
+    // ターゲット(プレイヤー)側の情報。ターゲットが変わったときだけ取得し直す
+    private Transform cachedTarget;
+    private Rigidbody targetRb;
+    private MechStatsControl targetStats;
 
     private void Awake()
     {
@@ -28,23 +36,67 @@ public class MechEnemySensor : MonoBehaviour
     private void Update()
     {
         if (blackboard.Target == null)
-        {
-            Debug.Log("Target Null");
             return;
+
+        if (blackboard.Target != cachedTarget)
+        {
+            cachedTarget = blackboard.Target;
+            targetRb = cachedTarget.GetComponent<Rigidbody>();
+            targetStats = cachedTarget.GetComponent<MechStatsControl>();
         }
 
         bool visible = CanSeeTarget();
 
         blackboard.CanSeeTarget = visible;
 
-        Debug.Log("CanSeeTarget = " + visible);
-
         blackboard.TargetDistance = Vector3.Distance(transform.position, blackboard.Target.position);
 
-        if(visible)
+        if (visible)
         {
             blackboard.LastKnownPosition = blackboard.Target.position;
         }
+
+        blackboard.HeightDifference = blackboard.Target.position.y - transform.position.y;
+
+        if (targetRb != null)
+        {
+            blackboard.TargetVelocity = targetRb.velocity;
+
+            // プレイヤーが敵に向かって近づいている速さ
+            Vector3 toEnemy = (transform.position - blackboard.Target.position).normalized;
+
+            float closingSpeed = Vector3.Dot(targetRb.velocity, toEnemy);
+
+            blackboard.IsPlayerBoosting = closingSpeed > 20f;
+        }
+
+        UpdatePlayerView();
+    }
+
+    // プレイヤーから見て、自分(敵)が「向き」「射程」に入っているか = 捕捉されているか
+    private void UpdatePlayerView()
+    {
+        float lockRange = fallbackPlayerLockRange;
+        float lockAngle = fallbackPlayerLockAngle;
+
+        if (targetStats != null && targetStats.CurrentStats != null)
+        {
+            if (targetStats.CurrentStats.lockRange > 0f)
+                lockRange = targetStats.CurrentStats.lockRange;
+
+            if (targetStats.CurrentStats.lockRadius > 0f)
+                lockAngle = targetStats.CurrentStats.lockRadius;
+        }
+
+        Vector3 toEnemy = transform.position - blackboard.Target.position;
+
+        blackboard.PlayerLookAngle = Vector3.Angle(blackboard.Target.forward, toEnemy);
+
+        blackboard.IsInPlayerSight = blackboard.PlayerLookAngle <= lockAngle;
+
+        blackboard.IsInPlayerRange = toEnemy.magnitude <= lockRange;
+
+        blackboard.IsCapturedByPlayer = blackboard.IsInPlayerSight && blackboard.IsInPlayerRange;
     }
 
     public bool CanSeeTarget()
@@ -52,45 +104,28 @@ public class MechEnemySensor : MonoBehaviour
         if (blackboard.Target == null)
             return false;
 
-        // if (statsControl == null)
-        //     return false;
-
-        // if (statsControl.CurrentStats == null)
-        //     return false;
-
-        // float lockRange = statsControl.CurrentStats.lockRange;
-
-        // if(statsControl != null && statsControl.CurrentStats != null)
-        // {
-        //     float lockRange = statsControl.CurrentStats.lockRange;
-        // }
-        // else
-        // {
-        //     float lockRange = detectDistance;
-        // }
-
         float lockRange = detectDistance;
 
-        if(statsControl != null && statsControl.CurrentStats != null)
+        if (statsControl != null && statsControl.CurrentStats != null)
         {
             lockRange = statsControl.CurrentStats.lockRange;
         }
 
         float lockRadius = viewAngle;
 
-        if(statsControl != null && statsControl.CurrentStats != null)
+        if (statsControl != null && statsControl.CurrentStats != null)
         {
             lockRadius = statsControl.CurrentStats.lockRadius;
         }
 
         float lockSpeed = 120f;
 
-        if(statsData != null)
+        if (statsData != null)
         {
             lockSpeed = statsData.targetLockSpeed;
         }
 
-        if(statsControl != null && statsControl.CurrentStats != null)
+        if (statsControl != null && statsControl.CurrentStats != null)
         {
             lockSpeed = statsControl.CurrentStats.lockSpeed;
         }
@@ -101,35 +136,24 @@ public class MechEnemySensor : MonoBehaviour
 
         float angle = Vector3.Angle(transform.forward, dir);
 
-        // float lockRadius = statsControl.CurrentStats.lockRadius;
-
         if (angle > lockRadius)
         {
             return false;
         }
+
         if (distance <= lockRange)
         {
             lockTimer += Time.deltaTime * lockSpeed;
 
-            if(lockTimer >= lockSpeed)
+            if (lockTimer >= lockSpeed)
             {
                 return true;
             }
-
-            // if (statsControl != null && statsControl.CurrentStats != null && lockTimer >= statsControl.CurrentStats.lockSpeed)
-            // {
-            //     return true;
-            // }
-            // else if (statsControl == null && statsControl.CurrentStats == null && lockTimer >= statsData.targetLockSpeed)
-            // {
-            //     return true;
-            // }
 
             return false;
         }
 
         lockTimer = 0;
         return false;
-        // return distance <= lockRange;
     }
 }

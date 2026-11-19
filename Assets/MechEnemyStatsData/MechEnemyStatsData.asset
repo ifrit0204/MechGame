@@ -19,3 +19,4 @@ MonoBehaviour:
   targetLockSpeed: 120
   fireInterval: 1
   damage: 36
+  aiProfile: {fileID: 11400000, guid: eea5b324acea9a2429ba01b0f9ded3f5, type: 2}

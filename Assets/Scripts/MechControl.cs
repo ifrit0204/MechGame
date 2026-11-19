@@ -36,6 +36,7 @@ public class MechControl : MonoBehaviour, IDamageable
     public Animator anim;
     public bool isGrounded, isEnergyRecharge, getBoost, boosting, isBoost, hasBoosted, getJump, isJump, boostJumping, boostJump, hasBoostJumped, getHyperBoost, isHyperBoost, isHyperBoostReady, hasHyperBoosted, boostRecharge, hasJumped, isFall, isMeleeDash;
     private bool isDead;
+    private bool energyInitialized;
     private MechJumpAction mechJump;
     private MechBoostAction mechBoost;
     private MechHyperBoostAction mechHyper;
@@ -76,6 +77,24 @@ public class MechControl : MonoBehaviour, IDamageable
         mechCamera = FindFirstObjectByType<MechCameraControl>();
         lockOn = GetComponent<MechLockOn>();
 
+        if (equipment == null)
+            equipment = GetComponent<MechEquipment>();
+
+        if (equipment == null)
+        {
+            Debug.LogError("MechEquipment Null", this);
+            maxHP = 0f;
+        }
+        else
+        {
+            maxHP = equipment.CalculateTotalStats().armor;
+
+            if (maxHP <= 0f)
+                Debug.LogWarning("Equipped parts have no ArmorPoint; the mech will be destroyed by any damage.", this);
+        }
+
+        currentHP = maxHP;
+
         jumpTimer = jumpTime;
         boostTimer = boostTime;
         boostJumpTimer = boostJumpTime;
@@ -96,17 +115,66 @@ public class MechControl : MonoBehaviour, IDamageable
     {
         lookInput = context.ReadValue<Vector2>();
     }
+    // public void ApplyParts()
+    // {
+    //     if(equipment == null)
+    //         return;
+    //     if(equipment.legs != null)
+    //         moveSpeed = equipment.legs.moveSpeed;
+    //         groundMultiplier = equipment.legs.groundMultiplier;
+    //     if(equipment.booster != null)
+    //         boostForce = equipment.booster.boostForce;
+    //     if(equipment.generator != null)
+    //         boostEnergyMax = equipment.generator.boostEnergyMax;
+    // }
     public void ApplyParts()
     {
-        if(equipment == null)
+        if (equipment == null)
             return;
-        if(equipment.legs != null)
+
+        if (equipment.legs != null)
+        {
             moveSpeed = equipment.legs.moveSpeed;
+            jumpForce = equipment.legs.jumpForce;
+            jumpPerformance = equipment.legs.jumpPerformance;
             groundMultiplier = equipment.legs.groundMultiplier;
-        if(equipment.booster != null)
-            boostForce = equipment.booster.boostForce;
-        if(equipment.generator != null)
-            boostEnergyMax = equipment.generator.boostEnergyMax;
+        }
+
+        if (equipment.booster != null)
+        {
+            MechBoosterPartData b = equipment.booster;
+
+            boostForce = b.boostForce;
+            boostFirstForce = b.boostFirstForce;
+            boostCost = b.boostCost;
+            boostEfficiency = b.boostEfficiency;
+            boostJumpForce = b.boostJumpForce;
+            boostJumpCost = b.boostJumpCost;
+            hyperBoost = b.hyperBoostForce;
+            hyperFirstBoost = b.hyperBoostFirstForce;
+            hyperBoostCost = b.hyperBoostCost;
+        }
+
+        if (equipment.generator != null)
+        {
+            MechGeneratorPartData g = equipment.generator;
+
+            boostEnergyMax = g.boostEnergyMax;
+            energyRechargeRate = g.energyRechargeRate;
+            energyRechargeRateBasic = g.energyRechargeRateBasic;
+
+            if (!energyInitialized)
+            {
+                // 最初に装備したときだけ満タンにする
+                boostEnergy = boostEnergyMax;
+                energyInitialized = true;
+            }
+            else
+            {
+                // パーツ変更で上限が下がった場合に備える
+                boostEnergy = Mathf.Min(boostEnergy, boostEnergyMax);
+            }
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -123,6 +191,10 @@ public class MechControl : MonoBehaviour, IDamageable
     }
     public void TakeDamage(DamageData damageData)
     {
+        // ミッション完了の演出中は、やられてリザルトが二重に開かないようにする
+        if (MechGameManager.Instance != null && MechGameManager.Instance.IsMissionClearing)
+            return;
+
         totalDamageTaken += damageData.Damage;
 
         switch (damageData.Type)
@@ -440,9 +512,9 @@ public class MechControl : MonoBehaviour, IDamageable
             // ★ 慣性による水平移動
             rb.AddForce(horizontalVelocity, ForceMode.Acceleration);
             // rb.AddForce(boostDirection * boostForce * boostFirstForce, ForceMode.Force);
-            if (moveInput.x != 0) mechCamera.SetSideBoostCamera(true);
-            else if (moveInput.x == 0) mechCamera.SetSideBoostCamera(false);
-            else mechCamera.ResetSideBoostCamera();
+            // if (moveInput.x != 0) mechCamera.SetSideBoostCamera(true);
+            // else if (moveInput.x == 0) mechCamera.SetSideBoostCamera(false);
+            // else mechCamera.ResetSideBoostCamera();
             isBoost = hasBoosted = boostRecharge = true;
             mechBoost.isBoost = isBoost;
             mechBoost.hasBoosted = hasBoosted;
@@ -491,13 +563,22 @@ public class MechControl : MonoBehaviour, IDamageable
         {
             rb.AddForce(horizontalVelocity, ForceMode.Acceleration);
         }
+        // if (!boosting && !isBoost && !boostJump && !isHyperBoost)
+        // {
+        //     if (isEnergyRecharge) return;
+
+        //     // boostEnergy += energyRechargeRate * Time.fixedDeltaTime;
+        //     boostEnergy = Mathf.Min(boostEnergy + energyRechargeRate * Time.fixedDeltaTime, boostEnergyMax);
+        //     // boostEnergy = Mathf.Clamp(boostEnergy, 0, boostEnergyMax);
+        // }
         if (!boosting && !isBoost && !boostJump && !isHyperBoost)
         {
             if (isEnergyRecharge) return;
 
-            // boostEnergy += energyRechargeRate * Time.fixedDeltaTime;
-            boostEnergy = Mathf.Min(boostEnergy + energyRechargeRate * Time.fixedDeltaTime, boostEnergyMax);
-            // boostEnergy = Mathf.Clamp(boostEnergy, 0, boostEnergyMax);
+            // 接地中は energyRechargeRate、空中は energyRechargeRateBasic
+            float rechargeRate = isGrounded ? energyRechargeRate : energyRechargeRateBasic;
+
+            boostEnergy = Mathf.Min(boostEnergy + rechargeRate * Time.fixedDeltaTime, boostEnergyMax);
         }
         if(isMeleeDash && lockOn.currentTarget != null)
         {

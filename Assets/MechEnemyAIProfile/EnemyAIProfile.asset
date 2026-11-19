@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6550f9b0e6a59684b86369b27ae7b559, type: 3}
+  m_Name: EnemyAIProfile
+  m_EditorClassIdentifier: 
+  personality: 1
+  reactionSpeed: 1
+  courage: 1
+  accuracy: 1
+  minActionDuration: 1.5
+  allowAssault: 1
+  assaultWillingness: -1
+  assaultStartRate: 1
+  assaultMaxDuration: 3
+  assaultCooldown: 4
+  abortCaptureTime: 1
+  assaultMinHpRate: 0.35
+  assaultBoostCost: 15
+  approachBoostCost: 10
+  dashAttackSpeed: 15
+  disadvantageApproachRate: 0.15
+  retreatWeight: 1
+  orbitWeight: 1
+  approachWeight: 1
+  altitudeWeight: 1
+  behindWeight: 1
+  sideBoostWeight: 1
+  boostRegenPerSec: 20
+  pressureDecayPerSec: 30
+  aggressionDecayPerSec: 3

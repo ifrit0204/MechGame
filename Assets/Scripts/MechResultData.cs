@@ -20,4 +20,6 @@ public class MechResultData
     public string rank;
 
     public int arenaRank;
+
+    public bool isArena;
 }

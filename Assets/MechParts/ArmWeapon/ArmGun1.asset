@@ -22,10 +22,11 @@ MonoBehaviour:
   price: 20000
   weaponType: 1
   lockDistance: 0
-  bulletSpeed: 120
+  bulletSpeed: 180
   reloadTime: 0.24
   spread: 0
   ammo: 120
+  muzzleName: Muzzle
   attackTrigger: 
   attackRange: 0
   projectilePrefab: {fileID: 598417222192524591, guid: e6fa51a6dbbb63c4eb5884154e01bc41,
@@ -38,3 +39,4 @@ MonoBehaviour:
   chargeDamageData:
     Damage: 72
     Type: 0
+  chargeAttackTrigger: 

@@ -26,6 +26,8 @@ public class MechResultSceneUI : MonoBehaviour
 
     [SerializeField] private Text arenaText;
 
+    [SerializeField] private float voiceStartDelay = 0.5f;
+
     void Start()
     {
         var result = MechGameManager.Instance.CurrentResult;
@@ -49,6 +51,25 @@ public class MechResultSceneUI : MonoBehaviour
         rankText.text = result.rank;
 
         arenaText.text = "#" + result.arenaRank;
+
+        PlayResultVoice(result);
+    }
+
+    private void PlayResultVoice(MechResultData result)
+    {
+        // アリーナのときはミッションのボイスを流さない(後述)
+        if (result.isArena)
+            return;
+
+        MechMissionData mission = MechGameManager.Instance.CurrentMission;
+
+        if (mission == null)
+            return;
+
+        MechGameManager.Instance.PlayVoiceLine(
+            mission.resultVoice,
+            mission.resultSubtitle,
+            voiceStartDelay);
     }
 
     private string FormatTime(float time)
@@ -61,6 +82,8 @@ public class MechResultSceneUI : MonoBehaviour
     }
     public void ReturnGarage()
     {
+        MechGameManager.Instance.StopBriefing();
+
         SceneManager.LoadScene("GarageScene");
     }
 }

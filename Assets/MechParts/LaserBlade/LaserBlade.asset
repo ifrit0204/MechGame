@@ -25,7 +25,8 @@ MonoBehaviour:
   bulletSpeed: 0
   reloadTime: 3
   spread: 0
-  ammo: 12
+  ammo: 0
+  muzzleName: 
   attackTrigger: LaserBladeSlash
   attackRange: 24
   projectilePrefab: {fileID: 0}
@@ -37,3 +38,4 @@ MonoBehaviour:
   chargeDamageData:
     Damage: 600
     Type: 1
+  chargeAttackTrigger: 

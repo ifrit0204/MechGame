@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class MechGameManager : MonoBehaviour
 {
+    private const string LogTag = "[MissionVoice] ";
+
     public static MechGameManager Instance;
     public int enemyCount;
     public MechLoadout CurrentLoadout = new MechLoadout();
@@ -22,6 +24,35 @@ public class MechGameManager : MonoBehaviour
     public bool HasResult;
     private float missionStartTime;
 
+    [Header("Mission Complete Voice (ミッション完了ボイス・字幕)")]
+    // ミッション側(MechMissionData)に指定がないときに使うボイスと字幕
+    [SerializeField] private AudioClip defaultCompleteVoice;
+    [SerializeField, TextArea(1, 3)] private string defaultCompleteSubtitle;
+    // アリーナの敵側(MechArenaEnemyData.clearVoice)に指定がないときに使うボイスと字幕
+    // (どちらも空なら、すぐリザルトへ移る)
+    [SerializeField] private AudioClip arenaCompleteVoice;
+    [SerializeField, TextArea(1, 3)] private string arenaCompleteSubtitle;
+    // 最後の敵を倒してから、ボイスが始まるまでの間(秒)
+    [SerializeField] private float voiceStartDelay = 0.8f;
+    // ボイスが終わってから、リザルトへ移るまでの間(秒)
+    [SerializeField] private float resultDelayAfterVoice = 0.8f;
+    [SerializeField, Range(0f, 1f)] private float voiceVolume = 1f;
+
+    [Header("Subtitle (字幕)")]
+    // ボイスがなく字幕だけのとき、最低限表示する時間(秒)
+    [SerializeField] private float subtitleMinDuration = 2f;
+    // ボイスがなく字幕だけのとき、1文字あたりの表示時間(秒)
+    [SerializeField] private float subtitleSecondsPerChar = 0.12f;
+
+    private AudioSource voiceSource;
+
+    // 登場ボイスなど、待ち時間つきで再生を予約しているもの
+    private Coroutine voiceLineRoutine;
+
+    // ミッション完了の演出中(ボイス再生中)か
+    private bool isClearing;
+    public bool IsMissionClearing { get { return isClearing; } }
+
     public MechResultData CurrentResult = new MechResultData();
     public void StartMissionResult()
     {
@@ -32,26 +63,19 @@ public class MechGameManager : MonoBehaviour
     public void BeginBattle()
     {
         missionStartTime = Time.time;
+
+        // 前のミッションの演出フラグが残らないようにする(このオブジェクトはシーンをまたいで残る)
+        isClearing = false;
     }
 
     public void AddBonusCredits(int amount)
     {
         bonusCredits += amount;
     }
-    // public void NewGame()
-    // {
-    //     Credits = 50000;
-    //     bonusCredits = 0;
-
-    //     CurrentMission = firstMission;
-
-    //     Debug.Log("初期ミッション設定 : " + CurrentMission.missionName);
-    // }
 
     [SerializeField] private MechPartData[] starterParts;
 
     public List<MechPartData> OwnedParts = new List<MechPartData>();
-    // [SerializeField] private MechPartData[] starterParts;
     public bool IsOwned(MechPartData part)
     {
         return OwnedParts.Contains(part);
@@ -176,6 +200,15 @@ public class MechGameManager : MonoBehaviour
 
             DontDestroyOnLoad(gameObject);
 
+            // ボイス再生用の AudioSource(2D)。なければ自動で追加する
+            voiceSource = GetComponent<AudioSource>();
+
+            if (voiceSource == null)
+                voiceSource = gameObject.AddComponent<AudioSource>();
+
+            voiceSource.playOnAwake = false;
+            voiceSource.spatialBlend = 0f;
+
             if(CurrentMission == null)
             {
                 CurrentMission = firstMission;
@@ -196,9 +229,36 @@ public class MechGameManager : MonoBehaviour
         }
         else
         {
+            // 既に別の GameManager が残っているので、こちらは破棄される。
+            // このシーンのインスペクターで設定した値(ボイスなど)は使われず、
+            // 残っている側の GameManager の値が使われる。
+            Debug.LogWarning(LogTag + "シーン「" + gameObject.scene.name + "」の GameManager は、"
+                + "既に GameManager が存在するため破棄されます。ボイスの設定は、残る側の GameManager のものが使われます");
+
             Destroy(gameObject);
         }
     }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // シーンが切り替わったら、予約中のボイスと再生中のボイスを止める
+    // (登場ボイスの途中でやられて、リザルトにまで声が残らないようにする)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        StopVoiceLine();
+
+        if (voiceSource != null)
+            voiceSource.Stop();
+    }
+
     void Start()
     {
         Debug.Log("OwnedParts Count : " + OwnedParts.Count);
@@ -226,14 +286,19 @@ public class MechGameManager : MonoBehaviour
             MissionClear();
         }
     }
-    // void MissionClear()
-    // {
-    //     SceneManager.LoadScene("ResultScene");
-    // }
     void MissionClear()
     {
         if(CurrentMission == null)
+        {
+            Debug.LogWarning(LogTag + "MissionClear: CurrentMission が空のため、何もせず戻ります(リザルトへも移りません)");
             return;
+        }
+
+        // 二重に呼ばれても、演出とリザルト遷移は1回だけ
+        if (isClearing)
+            return;
+
+        isClearing = true;
 
         int totalReward = CurrentMission.reward + bonusCredits;
 
@@ -243,9 +308,12 @@ public class MechGameManager : MonoBehaviour
         CurrentResult.bonusReward = bonusCredits;
 
         CurrentResult.totalReward = totalReward;
+
+        // クリアタイムは、ボイスを流す前の時点で確定させる(ボイスの時間を含めない)
         CurrentResult.clearTime = Time.time - missionStartTime;
-        // CurrentResult.arenaRank = CurrentArenaEnemy.arenaRank;
         CurrentResult.rank = CalculateRank();
+
+        CurrentResult.isArena = false;
 
         MechControl player = FindFirstObjectByType<MechControl>();
 
@@ -253,8 +321,6 @@ public class MechGameManager : MonoBehaviour
         {
             CurrentResult.damageTaken = player.totalDamageTaken;
         }
-
-        // CurrentResult.damageTaken = player.totalDamageTaken;
 
         Credits += totalReward;
 
@@ -264,12 +330,33 @@ public class MechGameManager : MonoBehaviour
 
         bonusCredits = 0;
 
-        SceneManager.LoadScene("ResultScene");
+        // ミッション固有の設定 → なければ既定の設定 → それもなければ、すぐリザルトへ
+        // (ボイスと字幕は、必ず同じ側のものを組み合わせて使う)
+        AudioClip voice;
+        string subtitle;
+
+        if (HasLine(CurrentMission.completeVoice, CurrentMission.completeSubtitle))
+        {
+            voice = CurrentMission.completeVoice;
+            subtitle = CurrentMission.completeSubtitle;
+        }
+        else
+        {
+            voice = defaultCompleteVoice;
+            subtitle = defaultCompleteSubtitle;
+        }
+
+        StartCoroutine(ResultSequence(voice, subtitle));
     }
     public void ArenaClear()
     {
         if(CurrentArenaEnemy == null)
             return;
+
+        if (isClearing)
+            return;
+
+        isClearing = true;
 
         int reward = CurrentArenaEnemy.reward;
 
@@ -278,6 +365,8 @@ public class MechGameManager : MonoBehaviour
         CurrentResult.title = CurrentArenaEnemy.enemyName;
 
         CurrentResult.arenaRank = CurrentArenaEnemy.arenaRank;
+
+        CurrentResult.isArena = true;
 
         if(!clearedArenaEnemies.Contains(id))
         {
@@ -289,8 +378,136 @@ public class MechGameManager : MonoBehaviour
         LastResultTitle = CurrentArenaEnemy.enemyName;
         HasResult = true;
 
+        // この敵の撃破ボイス・字幕 → なければ共通のアリーナ用 → それもなければ、すぐリザルトへ
+        AudioClip voice;
+        string subtitle;
+
+        if (HasLine(CurrentArenaEnemy.clearVoice, CurrentArenaEnemy.clearSubtitle))
+        {
+            voice = CurrentArenaEnemy.clearVoice;
+            subtitle = CurrentArenaEnemy.clearSubtitle;
+        }
+        else
+        {
+            voice = arenaCompleteVoice;
+            subtitle = arenaCompleteSubtitle;
+        }
+
+        StartCoroutine(ResultSequence(voice, subtitle));
+    }
+
+    // ボイスと字幕を同時に出し、終わってからリザルト画面へ移る。
+    // どちらもなければ、待たずにすぐ移る(従来どおり)。
+    private IEnumerator ResultSequence(AudioClip voice, string subtitle)
+    {
+        bool hasVoice = voice != null && voiceSource != null;
+        bool hasSubtitle = !string.IsNullOrEmpty(subtitle);
+
+        if (hasVoice || hasSubtitle)
+        {
+            // 予約中の別のボイス(登場ボイスなど)があれば止める
+            StopVoiceLine();
+
+            // 最後の敵の爆発などが落ち着くまで、少し待つ
+            yield return new WaitForSecondsRealtime(voiceStartDelay);
+
+            float duration = GetLineDuration(hasVoice ? voice : null, subtitle);
+
+            if (hasVoice)
+                PlayVoice(voice);
+
+            if (hasSubtitle)
+                MechSubtitleUI.Show(subtitle, duration);
+
+            // ボイスの長さ + 余韻 だけ待つ
+            yield return new WaitForSecondsRealtime(duration + resultDelayAfterVoice);
+
+            MechSubtitleUI.Hide();
+        }
+
+        isClearing = false;
+
         SceneManager.LoadScene("ResultScene");
     }
+
+    // ------------------------------------------------------------
+    // ボイス・字幕(どこからでも呼べる)
+    // ------------------------------------------------------------
+
+    // ボイスを再生し、同時に字幕を表示する。
+    // ボイスだけ、字幕だけでもよい。delay 秒待ってから始める。
+    // 例: アリーナの敵の登場ボイス
+    public void PlayVoiceLine(AudioClip voice, string subtitle, float delay = 0f)
+    {
+        if (!HasLine(voice, subtitle))
+            return;
+
+        StopVoiceLine();
+
+        voiceLineRoutine = StartCoroutine(VoiceLineRoutine(voice, subtitle, delay));
+    }
+
+    private IEnumerator VoiceLineRoutine(AudioClip voice, string subtitle, float delay)
+    {
+        if (delay > 0f)
+            yield return new WaitForSecondsRealtime(delay);
+
+        float duration = GetLineDuration(voice, subtitle);
+
+        PlayVoice(voice);
+
+        if (!string.IsNullOrEmpty(subtitle))
+            MechSubtitleUI.Show(subtitle, duration);
+
+        voiceLineRoutine = null;
+    }
+
+    private void StopVoiceLine()
+    {
+        if (voiceLineRoutine != null)
+        {
+            StopCoroutine(voiceLineRoutine);
+            voiceLineRoutine = null;
+        }
+    }
+
+    public void StopBriefing()
+    {
+        StopVoiceLine();
+
+        if (voiceSource != null)
+            voiceSource.Stop();
+
+        MechSubtitleUI.Hide();
+    }
+
+    private void PlayVoice(AudioClip voice)
+    {
+        if (voice == null || voiceSource == null)
+            return;
+
+        voiceSource.Stop();
+        voiceSource.clip = voice;
+        voiceSource.volume = voiceVolume;
+        voiceSource.Play();
+    }
+
+    private static bool HasLine(AudioClip voice, string subtitle)
+    {
+        return voice != null || !string.IsNullOrEmpty(subtitle);
+    }
+
+    // 字幕を出し続ける時間。ボイスがあればその長さ、なければ文字数から決める。
+    private float GetLineDuration(AudioClip voice, string subtitle)
+    {
+        if (voice != null)
+            return voice.length;
+
+        int length = string.IsNullOrEmpty(subtitle) ? 0 : subtitle.Length;
+
+        return Mathf.Max(subtitleMinDuration, length * subtitleSecondsPerChar);
+    }
+
     private string CalculateRank()
     {
         float score = 0;

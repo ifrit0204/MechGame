@@ -18,11 +18,26 @@ public class MechBattleSpawner : MonoBehaviour
 
         equipment.ApplyLoadout(MechGameManager.Instance.CurrentLoadout);
 
+        mech.GetComponent<MechAmmoControl>().Initialize();
+
         MechLockOn lockOn = mech.GetComponent<MechLockOn>();
 
         MechLockOnUI ui = FindFirstObjectByType<MechLockOnUI>();
 
         ui.SetLockOn(lockOn);
+
+        // ブーストバーにクローンを渡す
+        MechBoostBar boostBar = FindFirstObjectByType<MechBoostBar>();
+
+        if (boostBar != null)
+        {
+            boostBar.SetMech(mech.GetComponent<MechControl>());
+        }
+        else
+        {
+            Debug.LogWarning("MechBoostBarがシーンに見つかりません。");
+        }
+        
         MechEnemyAI[] enemies = FindObjectsByType<MechEnemyAI>(FindObjectsSortMode.None);
 
         MechGameManager.Instance.BeginBattle();

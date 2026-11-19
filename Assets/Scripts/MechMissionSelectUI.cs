@@ -61,6 +61,9 @@ public class MechMissionSelectUI : MonoBehaviour
         descriptionText.text = mission.description;
 
         rewardText.text = mission.reward.ToString();
+
+        // // ブリーフィングを再生(前のブリーフィングは PlayVoiceLine 内で止まる)
+        // MechGameManager.Instance.PlayVoiceLine(mission.briefingVoice, mission.briefingSubtitle);
     }
     private void OnEnable()
     {
@@ -69,6 +72,11 @@ public class MechMissionSelectUI : MonoBehaviour
         SelectFirstMission();
     }
     
+    private void OnDisable()
+    {
+        if (MechGameManager.Instance != null)
+            MechGameManager.Instance.StopBriefing();
+    }
 
     private void Refresh()
     {
@@ -106,7 +114,14 @@ public class MechMissionSelectUI : MonoBehaviour
 
         missionButtons.Add(button);
 
-        button.onClick.AddListener(() => SelectMission(mission));
+        // button.onClick.AddListener(() => SelectMission(mission));
+
+        button.onClick.AddListener(() => {SelectMission(mission); PlayBriefing(mission);});
+    }
+
+    private void PlayBriefing(MechMissionData mission)
+    {
+        MechGameManager.Instance.PlayVoiceLine(mission.briefingVoice, mission.briefingSubtitle);
     }
 
     public void SelectFirstMission()

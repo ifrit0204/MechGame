@@ -17,4 +17,9 @@ public class MechEnemyLoadout : ScriptableObject
     public MechBoosterPartData Booster;
     public MechFCSPartData FCS;
     public MechGeneratorPartData Generator;
+
+    [Header("AI")]
+    // この装備セットの敵が使う思考設定。
+    // 指定すると、MechEnemyStatsData の aiProfile より優先される。
+    public MechEnemyAIProfile aiProfile;
 }

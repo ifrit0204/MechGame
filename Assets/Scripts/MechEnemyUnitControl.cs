@@ -60,9 +60,14 @@ public class MechEnemyUnitControl : MonoBehaviour, IDamageable
     }
     public void TakeDamage(DamageData damageData)
     {
+        blackboard.WasDamaged = true;
+        blackboard.LastDamageTime = Time.time;
         Debug.Log("TakeDamage");
         Debug.Log("Before " + currentHP);
+        blackboard.DamageDirection = (transform.position - blackboard.Target.position).normalized;
         blackboard.CurrentHP = currentHP;
+        blackboard.Aggression += 30f;
+        blackboard.Pressure += damageData.Damage * 0.2f;
         switch (damageData.Type)
         {
             case DamageType.Physical:
