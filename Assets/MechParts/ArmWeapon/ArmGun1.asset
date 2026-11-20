@@ -22,7 +22,7 @@ MonoBehaviour:
   price: 20000
   weaponType: 1
   lockDistance: 0
-  bulletSpeed: 180
+  bulletSpeed: 240
   reloadTime: 0.24
   spread: 0
   ammo: 120

@@ -17,14 +17,14 @@ MonoBehaviour:
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}
-  weight: 0
+  weight: 6000
   energyConsumption: 0
   price: 10000
   armorPoint: 3600
   legStabilityPerformance: 240
   legMeleeWeaponAptitude: 360
   moveSpeed: 120
-  jumpForce: 120
+  jumpForce: 240
   jumpPerformance: 120
   groundMultiplier: 100
   jumpTime: 0.18

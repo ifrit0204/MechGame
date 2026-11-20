@@ -17,9 +17,11 @@ MonoBehaviour:
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}
-  weight: 0
-  energyConsumption: 0
+  weight: 6200
+  energyConsumption: 360
   price: 10000
   armorPoint: 3960
   bodyStabilityPerformance: 240
   bodyMeleeWeaponAptitude: 360
+  bodyEnergyRecharge: 0
+  bodyBoostEfficiency: 0

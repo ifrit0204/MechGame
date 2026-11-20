@@ -13,15 +13,19 @@ MonoBehaviour:
   m_Name: Legs1
   m_EditorClassIdentifier: 
   partName: Legs1
+  description: 
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}
   weight: 0
   energyConsumption: 0
   price: 20000
+  armorPoint: 2800
+  legStabilityPerformance: 380
+  legMeleeWeaponAptitude: 180
   moveSpeed: 156
-  jumpForce: 156
-  jumpPerformance: 300
+  jumpForce: 180
+  jumpPerformance: 180
   groundMultiplier: 120
-  jumpTime: 1
-  jumpTimer: 1
+  jumpTime: 0.32
+  jumpTimer: 0.32

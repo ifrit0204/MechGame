@@ -17,8 +17,8 @@ MonoBehaviour:
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}
-  weight: 0
-  energyConsumption: 0
+  weight: 1200
+  energyConsumption: 180
   price: 10000
   boostForce: 540
   boostFirstForce: 2400

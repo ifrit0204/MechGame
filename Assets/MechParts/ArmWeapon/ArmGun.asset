@@ -17,12 +17,12 @@ MonoBehaviour:
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: 3161f80dcf282844cb3fdf748250d93b,
     type: 3}
-  weight: 0
-  energyConsumption: 0
+  weight: 1560
+  energyConsumption: 180
   price: 10000
   weaponType: 1
   lockDistance: 0
-  bulletSpeed: 180
+  bulletSpeed: 240
   reloadTime: 0.36
   spread: 0
   ammo: 120

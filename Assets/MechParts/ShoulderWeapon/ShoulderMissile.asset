@@ -17,8 +17,8 @@ MonoBehaviour:
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}
-  weight: 0
-  energyConsumption: 0
+  weight: 1800
+  energyConsumption: 240
   price: 20000
   weaponType: 1
   lockDistance: 0
@@ -26,6 +26,7 @@ MonoBehaviour:
   reloadTime: 1
   spread: 0
   ammo: 120
+  muzzleName: 
   attackTrigger: 
   attackRange: 0
   projectilePrefab: {fileID: 5501864942918073808, guid: 692921dca265e5a4a854dd5459f43a3e,
@@ -38,3 +39,4 @@ MonoBehaviour:
   chargeDamageData:
     Damage: 120
     Type: 2
+  chargeAttackTrigger: 
