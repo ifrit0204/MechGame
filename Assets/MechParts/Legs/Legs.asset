@@ -24,7 +24,7 @@ MonoBehaviour:
   legStabilityPerformance: 240
   legMeleeWeaponAptitude: 360
   moveSpeed: 120
-  jumpForce: 240
+  jumpForce: 360
   jumpPerformance: 120
   groundMultiplier: 100
   jumpTime: 0.18

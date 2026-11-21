@@ -96,6 +96,12 @@ public class MechEquipment : MonoBehaviour
     private int currentBoosterIndex = -1;
     private int currentGeneratorIndex = -1;
 
+    [Header("Weight")]
+    // 総重量がこの値のとき、ブースト速度の減少が最大になる
+    public float weightReference = 100000f;
+    // 最大でどれだけ減らすか(0.3 = 最大30%減)
+    [Range(0f, 0.9f)] public float maxBoostWeightPenalty = 0.3f;
+
 
     //==================================================
     // Weapon
@@ -124,6 +130,65 @@ public class MechEquipment : MonoBehaviour
     //==================================================
     // 共通のパーツ変更処理
     //==================================================
+
+    // 総重量から、ブースト速度の倍率を求める(戦闘中もガレージ表示も共通)
+    public float GetBoostWeightMultiplier(float totalWeight)
+    {
+        float ratio = Mathf.Clamp01(totalWeight / weightReference);
+
+        return 1f - ratio * maxBoostWeightPenalty;
+    }
+
+    // partType の枠を candidate に付け替えたときの総重量
+    public float GetPreviewTotalWeight(PartType partType, MechPartData candidate)
+    {
+        float total = CalculateTotalStats().weight;
+
+        MechPartData current = GetCurrentPart(partType);
+
+        if (current != null)
+            total -= current.weight;
+
+        if (candidate != null)
+            total += candidate.weight;
+
+        return total;
+    }
+
+    // partType の枠を part に付け替えたときの機体全体のステータス
+    public MechTotalStats CalculatePreviewStats(PartType partType, MechPartData part)
+    {
+        MechPartData original = GetCurrentPart(partType);
+
+        SetPartField(partType, part);
+
+        MechTotalStats stats = CalculateTotalStats();
+
+        SetPartField(partType, original);
+
+        return stats;
+    }
+
+    // モデルは生成せず、装備フィールドだけを差し替える(計算用)
+    private void SetPartField(PartType partType, MechPartData part)
+    {
+        switch (partType)
+        {
+            case PartType.Head: head = (MechHeadPartData)part; break;
+            case PartType.Body: body = (MechBodyPartData)part; break;
+            case PartType.Arms: arms = (MechArmsPartData)part; break;
+            case PartType.Legs: legs = (MechLegsPartData)part; break;
+
+            case PartType.RightWeapon: rightWeapon = (MechWeaponPartData)part; break;
+            case PartType.LeftWeapon: leftWeapon = (MechWeaponPartData)part; break;
+            case PartType.RightShoulder: rightShoulder = (MechWeaponPartData)part; break;
+            case PartType.LeftShoulder: leftShoulder = (MechWeaponPartData)part; break;
+
+            case PartType.Booster: booster = (MechBoosterPartData)part; break;
+            case PartType.FCS: FCS = (MechFCSPartData)part; break;
+            case PartType.Generator: generator = (MechGeneratorPartData)part; break;
+        }
+    }
 
     public void ChangePart(PartType partType, int index)
     {
@@ -986,9 +1051,24 @@ public class MechEquipment : MonoBehaviour
             stats.weight += booster.weight;
             stats.energy += booster.energyConsumption;
 
+            stats.boostFirstForce = booster.boostFirstForce;
             stats.boostForce = booster.boostForce;
             stats.boostEfficiency = booster.boostEfficiency;
-            stats.boostEnergyCost = booster.boostCost;
+            stats.boostCost = booster.boostCost;
+            // stats.boostEnergyCost = booster.boostCost;
+            stats.boostJumpForce = booster.boostJumpForce;
+            stats.boostJumpCost = booster.boostJumpCost;
+            stats.hyperBoostForce = booster.hyperBoostForce;
+            stats.hyperBoostFirstForce = booster.hyperBoostFirstForce;
+            stats.hyperBoostCost = booster.hyperBoostCost;
+
+        }
+
+        if (generator != null)
+        {
+            stats.boostEnergyMax = generator.boostEnergyMax;
+            stats.energyRechargeRate = generator.energyRechargeRate;
+            stats.energyRechargeRateBasic = generator.energyRechargeRateBasic;
         }
 
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Text;
 
 public class MechPartInfoUI : MonoBehaviour
 {
@@ -12,12 +13,11 @@ public class MechPartInfoUI : MonoBehaviour
     [SerializeField] private Text meleeWeaponAptitudeText;
     [SerializeField] private Text weightText;
     [SerializeField] private Text energyText;
-
     [SerializeField] private Text statText;
-
+    [SerializeField] private Text descriptionText;
     [SerializeField] private MechEquipment equipment;
 
-    public void ShowPart(MechPartData part)
+    public void ShowPart(MechPartData part, PartType partType)
     {
         if (part == null)
         {
@@ -25,7 +25,8 @@ public class MechPartInfoUI : MonoBehaviour
             return;
         }
 
-        Debug.Log("ShowPart : " + part.partName);
+        // 同じ枠で今装備しているパーツ
+        MechPartData current = equipment != null ? equipment.GetCurrentPart(partType) : null;
 
         if (iconImage != null)
         {
@@ -34,210 +35,182 @@ public class MechPartInfoUI : MonoBehaviour
         }
 
         if (nameText != null)
-        {
             nameText.text = part.partName;
+
+        if (descriptionText != null)
+        {
+            descriptionText.text = part.description;
         }
 
-        // if (armorPointText != null)
-        // {
-        //     armorPointText.text = "AP : " + part.armorPoint.ToString("0");
-        // }
-
+        // 重量・消費ENは小さいほうが良い
         if (weightText != null)
         {
-            weightText.text = "WEIGHT : " + part.weight.ToString("0");
+            weightText.supportRichText = true;
+            weightText.text = Line("WEIGHT", part.weight, current?.weight, false, "0");
         }
 
         if (energyText != null)
         {
-            energyText.text = "EN : " + part.energyConsumption.ToString("0");
+            energyText.supportRichText = true;
+            energyText.text = Line("EN", part.energyConsumption, current?.energyConsumption, false, "0");
         }
 
-        statText.text = "";
+        if (statText == null)
+            return;
 
-        // if(part is MechHeadPartData head)
-        // {
-        //     statText.text = "SCAN RANGE : " + head.scanRange + "\nLOCK DISTANCE : " + head.lockDistance;
-        // }
-        if(part is MechHeadPartData head)
+        statText.supportRichText = true;
+
+        StringBuilder sb = new StringBuilder();
+
+        AppendPartStats(sb, part, current);
+
+        // sb.AppendLine();
+
+        // AppendMechPreview(sb, part, partType);
+
+        statText.text = sb.ToString();
+    }
+
+    // "ラベル : 値 (+差)" を作る。差は良くなれば緑、悪くなれば赤
+    // higherIsBetter = false のときは、値が小さくなるほうを緑にする
+    private string Line(string label, float value, float? current, bool higherIsBetter = true, string format = "0.##")
+    {
+        string text = label + " : " + value.ToString(format);
+
+        if (!current.HasValue)
+            return text;
+
+        float diff = value - current.Value;
+
+        if (Mathf.Abs(diff) < 0.0001f)
+            return text;
+
+        bool good = higherIsBetter ? diff > 0f : diff < 0f;
+
+        string color = good ? "lime" : "red";
+        string sign = diff > 0f ? "+" : "-";
+
+        return $"{text} <color={color}>({sign}{Mathf.Abs(diff).ToString(format)})</color>";
+    }
+
+    // パーツごとの性能(同じ種類の現在パーツと比較)
+    private void AppendPartStats(StringBuilder sb, MechPartData part, MechPartData current)
+    {
+        if (part is MechHeadPartData head)
         {
-            MechHeadPartData current = equipment != null ? equipment.head : null;
+            var c = current as MechHeadPartData;
 
-            float armorPointDiff = head.armorPoint - (current != null ? current.armorPoint : 0);
-            float stabilityPerformanceDiff = head.headStabilityPerformance - (current != null ? current.headStabilityPerformance : 0);
-            float meleeWeaponAptitudeDiff = head.headMeleeWeaponAptitude - (current != null ? current.headMeleeWeaponAptitude : 0);
-            float scanDiff = head.scanRange - (current != null ? current.scanRange : 0);
-            float lockDiff = head.lockDistance - (current != null ? current.lockDistance : 0);
-
-
-            statText.supportRichText = true;
-
-        statText.text = $"SCAN RANGE : {head.scanRange} {DiffText(scanDiff)}\n" + $"LOCK DISTANCE : {head.lockDistance} {DiffText(lockDiff)}" + $"Armor Point : {head.armorPoint} {DiffText(armorPointDiff)}\n" + $"Stability Performance : {head.headStabilityPerformance} {DiffText(stabilityPerformanceDiff)}\n" + $"Head Melee Weapon Aptitude : {head.headMeleeWeaponAptitude} {DiffText(meleeWeaponAptitudeDiff)}";
+            sb.AppendLine(Line("ARMOR POINT", head.armorPoint, c?.armorPoint));
+            sb.AppendLine(Line("STABILITY", head.headStabilityPerformance, c?.headStabilityPerformance));
+            sb.AppendLine(Line("MELEE APTITUDE", head.headMeleeWeaponAptitude, c?.headMeleeWeaponAptitude));
+            sb.AppendLine(Line("SCAN RANGE", head.scanRange, c?.scanRange));
+            sb.AppendLine(Line("LOCK DISTANCE", head.lockDistance, c?.lockDistance));
         }
-
         else if (part is MechBodyPartData body)
         {
-            MechBodyPartData current = equipment.body;
+            var c = current as MechBodyPartData;
 
-            statText.text =
-                $"Armor Point : {body.armorPoint}" + DiffText(body.armorPoint - current.armorPoint) + "\n" + 
-                $"Stability Performance : {body.bodyStabilityPerformance}" + DiffText(body.bodyStabilityPerformance - current.bodyStabilityPerformance) + "\n" + 
-                $"Melee Weapon Aptitude : {body.bodyMeleeWeaponAptitude}" + DiffText(body.bodyMeleeWeaponAptitude - current.bodyMeleeWeaponAptitude);
+            sb.AppendLine(Line("ARMOR POINT", body.armorPoint, c?.armorPoint));
+            sb.AppendLine(Line("STABILITY", body.bodyStabilityPerformance, c?.bodyStabilityPerformance));
+            sb.AppendLine(Line("MELEE APTITUDE", body.bodyMeleeWeaponAptitude, c?.bodyMeleeWeaponAptitude));
+            sb.AppendLine(Line("ENERGY RECHARGE", body.bodyEnergyRecharge, c?.bodyEnergyRecharge));
+            sb.AppendLine(Line("BOOST EFFICIENCY", body.bodyBoostEfficiency, c?.bodyBoostEfficiency));
         }
-
-        else if(part is MechArmsPartData arms)
+        else if (part is MechArmsPartData arms)
         {
-            MechArmsPartData current = equipment.arms;
+            var c = current as MechArmsPartData;
 
-            statText.text =
-                $"Armor Point : {arms.armorPoint}" + DiffText(arms.armorPoint - current.armorPoint) + "\n"
-
-                + $"Recoil Reduction : {arms.recoilReduction}" + DiffText(arms.recoilReduction - current.recoilReduction) + "\n"
-
-                + $"Arm Mobility : {arms.armMobility}" + DiffText(arms.armMobility - current.armMobility) + "\n"
-                    
-                + $"Arm Stability Performance : {arms.armStabilityPerformance}" + DiffText(arms.armStabilityPerformance - current.armStabilityPerformance) + "\n"
-
-                + $"Arm Melee Weapon Aptitude : {arms.armMeleeWeaponAptitude}" + DiffText(arms.armMeleeWeaponAptitude - current.armMeleeWeaponAptitude) + "\n";
-            // statText.text = "Armor Point : " + arms.armorPoint + "\nRecoil Reduction : " + arms.recoilReduction + "\nArm Mobility : " + arms.armMobility + "\nArm Stability Performance : " + arms.armStabilityPerformance + "\nAiming Performance : " + arms.aimingPerformance + "\nArm Melee Weapon Aptitude : " + arms.armMeleeWeaponAptitude;
+            sb.AppendLine(Line("ARMOR POINT", arms.armorPoint, c?.armorPoint));
+            sb.AppendLine(Line("RECOIL REDUCTION", arms.recoilReduction, c?.recoilReduction));
+            sb.AppendLine(Line("ARM MOBILITY", arms.armMobility, c?.armMobility));
+            sb.AppendLine(Line("ARM STABILITY", arms.armStabilityPerformance, c?.armStabilityPerformance));
+            sb.AppendLine(Line("AIMING", arms.aimingPerformance, c?.aimingPerformance));
+            sb.AppendLine(Line("MELEE APTITUDE", arms.armMeleeWeaponAptitude, c?.armMeleeWeaponAptitude));
         }
-        // else if(part is MechLegsPartData legs)
-        // {
-        //     statText.text = "MOVE SPEED : " + legs.moveSpeed + "\nJUMP FORCE : " + legs.jumpForce + "\nJUMP PERFORMANCE : " + legs.jumpPerformance;
-        // }
-        // else if (part is MechLegsPartData legs)
-        // {
-        //     MechLegsPartData current =
-        //         equipment.legs;
-
-        //     statText.text =
-        //         $"MOVE : {legs.moveSpeed}\n" +
-        //         $"JUMP : {legs.jumpForce}\n" +
-        //         $"PERFORMANCE : {legs.jumpPerformance}";
-        // }
-        else if(part is MechLegsPartData legs)
+        else if (part is MechLegsPartData legs)
         {
-            MechLegsPartData current =
-                equipment.legs;
+            var c = current as MechLegsPartData;
 
-            statText.text =
-                $"MOVE : {legs.moveSpeed}"
-                + DiffText(
-                    legs.moveSpeed -
-                    current.moveSpeed) + "\n"
-
-                + $"JUMP : {legs.jumpForce}"
-                + DiffText(
-                    legs.jumpForce -
-                    current.jumpForce) + "\n"
-
-                + $"PERFORMANCE : {legs.jumpPerformance}"
-                + DiffText(
-                    legs.jumpPerformance -
-                    current.jumpPerformance);
+            sb.AppendLine(Line("ARMOR POINT", legs.armorPoint, c?.armorPoint));
+            sb.AppendLine(Line("STABILITY", legs.legStabilityPerformance, c?.legStabilityPerformance));
+            sb.AppendLine(Line("MELEE APTITUDE", legs.legMeleeWeaponAptitude, c?.legMeleeWeaponAptitude));
+            sb.AppendLine(Line("MOVE SPEED", legs.moveSpeed, c?.moveSpeed));
+            sb.AppendLine(Line("JUMP FORCE", legs.jumpForce, c?.jumpForce));
+            sb.AppendLine(Line("JUMP PERFORMANCE", legs.jumpPerformance, c?.jumpPerformance));
+            sb.AppendLine(Line("GROUND MULTIPLIER", legs.groundMultiplier, c?.groundMultiplier));
         }
-        else if(part is MechBoosterPartData booster)
+        else if (part is MechBoosterPartData booster)
         {
-            MechBoosterPartData current = equipment.booster;
+            var c = current as MechBoosterPartData;
 
-            float boostDiff =
-                booster.boostForce -
-                (current != null ?
-                current.boostForce : 0);
-
-            float costDiff =
-                booster.boostCost -
-                (current != null ?
-                current.boostCost : 0);
-
-            statText.text =
-                $"BOOST FORCE : {booster.boostForce} {DiffText(boostDiff)}\n" +
-                $"BOOST COST : {booster.boostCost} {DiffText(-costDiff)}";
-            // statText.text = "BOOST FORCE : " + booster.boostForce + "\nBOOST COST : " + booster.boostCost + "\nEFFICIENCY : " + booster.boostEfficiency;
+            sb.AppendLine(Line("BOOST FORCE", booster.boostForce, c?.boostForce));
+            sb.AppendLine(Line("BOOST FIRST FORCE", booster.boostFirstForce, c?.boostFirstForce));
+            sb.AppendLine(Line("BOOST COST", booster.boostCost, c?.boostCost, false));
+            sb.AppendLine(Line("BOOST EFFICIENCY", booster.boostEfficiency, c?.boostEfficiency));
+            sb.AppendLine(Line("BOOST JUMP FORCE", booster.boostJumpForce, c?.boostJumpForce));
+            sb.AppendLine(Line("BOOST JUMP COST", booster.boostJumpCost, c?.boostJumpCost, false));
+            sb.AppendLine(Line("HYPER BOOST FORCE", booster.hyperBoostForce, c?.hyperBoostForce));
+            sb.AppendLine(Line("HYPER BOOST COST", booster.hyperBoostCost, c?.hyperBoostCost, false));
         }
-        else if(part is MechGeneratorPartData generator)
+        else if (part is MechFCSPartData fcs)
         {
-            statText.text = "EN MAX : " + generator.boostEnergyMax + "\nRECHARGE : " + generator.energyRechargeRate;
+            var c = current as MechFCSPartData;
+
+            sb.AppendLine(Line("LOCK RANGE", fcs.lockRange, c?.lockRange));
+            sb.AppendLine(Line("LOCK SPEED", fcs.lockSpeed, c?.lockSpeed));
+            sb.AppendLine(Line("LOCK RADIUS", fcs.lockRadius, c?.lockRadius));
         }
-        else if(part is MechWeaponPartData weapon)
+        else if (part is MechGeneratorPartData gen)
         {
-            statText.text = "DAMAGE : " + weapon.damageData.Damage + "\nAMMO : " + weapon.ammo + "\nRELOAD : " + weapon.reloadTime + "\nRANGE : " + weapon.lockDistance;
+            var c = current as MechGeneratorPartData;
+
+            sb.AppendLine(Line("EN MAX", gen.boostEnergyMax, c?.boostEnergyMax));
+            sb.AppendLine(Line("RECHARGE (GROUND)", gen.energyRechargeRate, c?.energyRechargeRate));
+            sb.AppendLine(Line("RECHARGE (AIR)", gen.energyRechargeRateBasic, c?.energyRechargeRateBasic));
         }
-        // Debug.Log("InfoUI : " + part.partName);
+        else if (part is MechWeaponPartData weapon)
+        {
+            var c = current as MechWeaponPartData;
 
-        // if(nameText != null)
-        // {
-        //     Debug.Log("NameText Found");
-        // }
+            sb.AppendLine(Line("DAMAGE", weapon.damageData.Damage, c != null ? c.damageData.Damage : (float?)null));
+            sb.AppendLine(Line("AMMO", weapon.ammo, c?.ammo, true, "0"));
+            sb.AppendLine(Line("RELOAD", weapon.reloadTime, c?.reloadTime, false));
+            sb.AppendLine(Line("SPREAD", weapon.spread, c?.spread, false));
+            sb.AppendLine(Line("RANGE", weapon.lockDistance, c?.lockDistance));
+            sb.AppendLine(Line("BULLET SPEED", weapon.bulletSpeed, c?.bulletSpeed));
+        }
+    }
 
-        // nameText.text = part.partName;
-        // if (part == null)
-        // {
-        //     Clear();
-        //     return;
-        // }
+    // このパーツに付け替えたあとの、機体全体の値(重量補正後のブースト速度など)
+    private void AppendMechPreview(StringBuilder sb, MechPartData part, PartType partType)
+    {
+        if (equipment == null)
+            return;
 
-        // Debug.Log("ShowPart : " + part.partName);
+        float currentWeight = equipment.CalculateTotalStats().weight;
+        float newWeight = equipment.GetPreviewTotalWeight(partType, part);
 
-        // if(iconImage != null)
-        // {
-        //     iconImage.sprite = part.icon;
-        //     iconImage.enabled = part.icon != null;
-        // }
+        float currentMul = equipment.GetBoostWeightMultiplier(currentWeight);
+        float newMul = equipment.GetBoostWeightMultiplier(newWeight);
 
-        // if(nameText != null)
-        //     nameText.text = part.partName;
+        MechBoosterPartData currentBooster = equipment.booster;
 
-        // if(weightText != null)
-        //     weightText.text = "WEIGHT : " + part.weight;
+        // ブースターを選んでいるときはそのブースター、それ以外は今のブースターで計算
+        MechBoosterPartData newBooster = partType == PartType.Booster ? part as MechBoosterPartData : currentBooster;
 
-        // if(energyText != null)
-        //     energyText.text = "EN : " + part.energyConsumption;
+        sb.AppendLine("<b>- AFTER EQUIP -</b>");
+        sb.AppendLine(Line("TOTAL WEIGHT", newWeight, currentWeight, false, "0"));
 
-        // statText.text = "";
-        // Debug.Log("InfoUI : " + part.partName);
-        // if (part == null)
-        // {
-        //     return;
-        // }
+        if (newBooster == null)
+            return;
 
-        // if (iconImage != null)
-        // {
-        //     iconImage.sprite = part.icon;
-        //     iconImage.enabled = part.icon != null;
-        // }
+        float? curBoost = currentBooster != null ? currentBooster.boostForce * currentMul : (float?)null;
+        float? curHyper = currentBooster != null ? currentBooster.hyperBoostForce * currentMul : (float?)null;
+        float? curJump  = currentBooster != null ? currentBooster.boostJumpForce * currentMul : (float?)null;
 
-        // nameText.text = part.partName;
-
-        // weightText.text = "WEIGHT : " + part.weight.ToString("0");
-
-        // energyText.text = "EN : " + part.energyConsumption.ToString("0");
-
-        // statText.text = "";
-        // if (part is MechHeadPartData head)
-        // {
-        //     statText.text = "Scan Range : " + head.scanRange + "\nLock Distance : " + head.lockDistance;
-        // }
-        // else if (part is MechArmsPartData arms)
-        // {
-        //     statText.text = "Scan Range : " + arms.scanRange + "\nLock Distance : " + arms.lockDistance;
-        // }
-        // else if (part is MechLegsPartData legs)
-        // {
-        //     statText.text = "Move Speed : " + legs.moveSpeed + "\nJump Force : " + legs.jumpForce + "\nJump Performance : " + legs.jumpPerformance;
-        // }
-        // else if (part is MechBoosterPartData booster)
-        // {
-        //     statText.text = "Boost Force : " + booster.boostForce + "\nBoost Cost : " + booster.boostCost + "\nEfficiency : " + booster.boostEfficiency;
-        // }
-        // else if (part is MechGeneratorPartData generator)
-        // {
-        //     statText.text = "EN Max : " + generator.boostEnergyMax + "\nRecharge : " + generator.energyRechargeRate;
-        // }
-        // else if (part is MechWeaponPartData weapon)
-        // {
-        //     statText.text = "Damage : " + weapon.damageData.Damage + "\nAmmo : " + weapon.ammo + "\nReload : " + weapon.reloadTime + "\nRange : " + weapon.lockDistance;
-        // }
+        sb.AppendLine(Line("BOOST SPEED", newBooster.boostForce * newMul, curBoost));
+        sb.AppendLine(Line("HYPER BOOST SPEED", newBooster.hyperBoostForce * newMul, curHyper));
+        sb.AppendLine(Line("BOOST JUMP", newBooster.boostJumpForce * newMul, curJump));
     }
     private string DiffColor(float diff)
     {
@@ -255,26 +228,26 @@ public class MechPartInfoUI : MonoBehaviour
     //         $"({diff:+#;-#;0})" +
     //         $"</color>";
     // }
-    private string DiffText(float diff)
-    {
-        if(diff == 0)
-            return "";
+    // private string DiffText(float diff)
+    // {
+    //     if(diff == 0)
+    //         return "";
 
-        string color = diff > 0 ? "lime" : "red";
+    //     string color = diff > 0 ? "lime" : "red";
 
-        return
-            $"<color={color}> {diff:+0;-0}</color>";
-    }
-    private string WeightDiffText(float diff)
-    {
-        if(diff == 0)
-            return "";
+    //     return
+    //         $"<color={color}> {diff:+0;-0}</color>";
+    // }
+    // private string WeightDiffText(float diff)
+    // {
+    //     if(diff == 0)
+    //         return "";
 
-        string color = diff < 0 ? "lime" : "red";
+    //     string color = diff < 0 ? "lime" : "red";
 
-        return
-            $"<color={color}> {diff:+0;-0}</color>";
-    }
+    //     return
+    //         $"<color={color}> {diff:+0;-0}</color>";
+    // }
     public void Show()
     {
         gameObject.SetActive(true);
@@ -294,6 +267,11 @@ public class MechPartInfoUI : MonoBehaviour
         if(nameText != null)
         {
             nameText.text = "-";
+        }
+
+        if (descriptionText != null)
+        {
+            descriptionText.text = "";
         }
 
         if(weightText != null)

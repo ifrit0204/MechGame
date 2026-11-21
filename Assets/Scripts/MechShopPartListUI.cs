@@ -34,6 +34,8 @@ public class MechShopPartListUI : MonoBehaviour
 
     public void ShowParts(PartType type, ShopMode mode)
     {
+        if (infoUI != null)
+            infoUI.Show();
         Debug.Log("PartList Active = " + gameObject.activeInHierarchy);
 
         hasSelectedCategory = true;
@@ -126,7 +128,7 @@ public class MechShopPartListUI : MonoBehaviour
 
         if(infoUI != null)
         {
-            infoUI.ShowPart(part);
+            infoUI.ShowPart(part, currentType);
         }
 
         OnPartSelected?.Invoke(part);
@@ -175,6 +177,11 @@ public class MechShopPartListUI : MonoBehaviour
     }
     public void ClearSelection()
     {
+        if(statsUI != null)
+        {
+            statsUI.Refresh();
+        }
+        
         SelectedPart = null;
 
         if(infoUI != null)

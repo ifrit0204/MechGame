@@ -163,7 +163,7 @@ public class MechPartListUI : MonoBehaviour
         ShowCurrentPart(partType);
         if(displayedParts.Count > 0)
         {
-            infoUI.ShowPart(displayedParts[0]);
+            infoUI.ShowPart(displayedParts[0], partType);
         }
         StartCoroutine(SelectFirstButtonNextFrame());
     }
@@ -178,6 +178,10 @@ public class MechPartListUI : MonoBehaviour
         if(infoUI != null)
         {
             infoUI.Hide();
+        }
+        if (statsUI != null)
+        {
+            statsUI.Refresh();
         }
     }
 
@@ -198,7 +202,7 @@ public class MechPartListUI : MonoBehaviour
 
         if(currentPart != null)
         {
-            infoUI.ShowPart(currentPart);
+            infoUI.ShowPart(currentPart, partType);
         }
 
 

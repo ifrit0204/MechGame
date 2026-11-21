@@ -63,7 +63,7 @@ public class MechPartButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExi
     {
         if(currentPart != null && infoUI != null)
         {
-            infoUI.ShowPart(currentPart);
+            infoUI.ShowPart(currentPart, partType);
         }
 
         if(statsUI != null)
@@ -95,7 +95,7 @@ public class MechPartButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
         if(infoUI != null)
         {
-            infoUI.ShowPart(currentPart);
+            infoUI.ShowPart(currentPart, partType);
         }
 
         if(statsUI != null)

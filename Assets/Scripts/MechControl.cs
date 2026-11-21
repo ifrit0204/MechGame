@@ -16,6 +16,15 @@ public class MechControl : MonoBehaviour, IDamageable
     public float currentHP;
     public float totalDamageTaken;
 
+    // [Header("Weight")]
+    // // 総重量がこの値のとき、ブースト速度の減少が最大になる(機体の最大想定重量に合わせて調整)
+    // [SerializeField] private float weightReference = 100000f;
+    // // 最大でどれだけ減らすか(0.3 = 最大30%減)
+    // [SerializeField, Range(0f, 0.9f)] private float maxBoostWeightPenalty = 0.3f;
+
+    public float totalWeight;
+    public float boostWeightMultiplier = 1f;
+
     public TeamType team = TeamType.Player;
     
     [SerializeField] private GameObject explosionPrefab;
@@ -132,6 +141,9 @@ public class MechControl : MonoBehaviour, IDamageable
         if (equipment == null)
             return;
 
+        totalWeight = equipment.CalculateTotalStats().weight;
+        boostWeightMultiplier = equipment.GetBoostWeightMultiplier(totalWeight);
+
         if (equipment.legs != null)
         {
             moveSpeed = equipment.legs.moveSpeed;
@@ -144,14 +156,14 @@ public class MechControl : MonoBehaviour, IDamageable
         {
             MechBoosterPartData b = equipment.booster;
 
-            boostForce = b.boostForce;
-            boostFirstForce = b.boostFirstForce;
+            boostForce = b.boostForce * boostWeightMultiplier;
+            boostFirstForce = b.boostFirstForce * boostWeightMultiplier;
             boostCost = b.boostCost;
             boostEfficiency = b.boostEfficiency;
-            boostJumpForce = b.boostJumpForce;
+            boostJumpForce = b.boostJumpForce * boostWeightMultiplier;;
             boostJumpCost = b.boostJumpCost;
-            hyperBoost = b.hyperBoostForce;
-            hyperFirstBoost = b.hyperBoostFirstForce;
+            hyperBoost = b.hyperBoostForce * boostWeightMultiplier;
+            hyperFirstBoost = b.hyperBoostFirstForce * boostWeightMultiplier;
             hyperBoostCost = b.hyperBoostCost;
         }
 
