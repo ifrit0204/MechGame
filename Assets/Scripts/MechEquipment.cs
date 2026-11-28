@@ -102,6 +102,10 @@ public class MechEquipment : MonoBehaviour
     // 最大でどれだけ減らすか(0.3 = 最大30%減)
     [Range(0f, 0.9f)] public float maxBoostWeightPenalty = 0.3f;
 
+    [Header("Energy Balance")]
+    [SerializeField] private float consumptionToRecharge = 1f; // 消費1あたり減る回復量
+    [SerializeField, Range(0f, 1f)] private float minRechargeRatio = 0.1f; // 下限(ボディ込み回復量の割合)
+
 
     //==================================================
     // Weapon
@@ -124,6 +128,15 @@ public class MechEquipment : MonoBehaviour
         {
             return database;
         }
+    }
+
+    // baseRate: ジェネレーターの energyRechargeRate か energyRechargeRateBasic
+    public float CalcRechargeRate(float baseRate, MechTotalStats stats)
+    {
+        float boosted = baseRate * (1f + stats.energyRecharge); // ボディ係数(掛け算)
+        float drain = stats.energy * consumptionToRecharge;     // 消費合計(引き算)
+
+        return Mathf.Max(boosted - drain, boosted * minRechargeRatio);
     }
 
 
@@ -987,6 +1000,7 @@ public class MechEquipment : MonoBehaviour
             stats.armor += body.armorPoint;
             stats.stability += body.bodyStabilityPerformance;
             stats.meleeAptitude += body.bodyMeleeWeaponAptitude;
+            stats.energyRecharge += body.bodyEnergyRecharge;
 
             // stats.armorPoint = Mathf.Max(stats.armorPoint, body.armorPoint);
             // stats.bodyStabilityPerformance = Mathf.Max(stats.bodyStabilityPerformance, body.bodyStabilityPerformance);
@@ -1055,6 +1069,8 @@ public class MechEquipment : MonoBehaviour
             stats.boostForce = booster.boostForce;
             stats.boostEfficiency = booster.boostEfficiency;
             stats.boostCost = booster.boostCost;
+            stats.boostVerticalForce = booster.boostVerticalForce;
+            stats.boostVerticalCost = booster.boostVerticalCost;
             // stats.boostEnergyCost = booster.boostCost;
             stats.boostJumpForce = booster.boostJumpForce;
             stats.boostJumpCost = booster.boostJumpCost;
@@ -1066,6 +1082,9 @@ public class MechEquipment : MonoBehaviour
 
         if (generator != null)
         {
+            stats.weight += generator.weight;
+            stats.energy += generator.energyConsumption;
+
             stats.boostEnergyMax = generator.boostEnergyMax;
             stats.energyRechargeRate = generator.energyRechargeRate;
             stats.energyRechargeRateBasic = generator.energyRechargeRateBasic;
@@ -1102,12 +1121,6 @@ public class MechEquipment : MonoBehaviour
         //==============================
         // Generator
         //==============================
-
-        if (generator != null)
-        {
-            stats.weight += generator.weight;
-            stats.energy += generator.energyConsumption;
-        }
 
 
         return stats;
@@ -1202,7 +1215,9 @@ public class MechEquipment : MonoBehaviour
 
             stats.boostForce = loadout.Booster.boostForce;
             stats.boostFirstForce = loadout.Booster.boostFirstForce;
+            stats.boostVerticalForce = loadout.Booster.boostVerticalForce;
             stats.boostCost = loadout.Booster.boostCost;
+            stats.boostVerticalCost = loadout.Booster.boostVerticalCost;
             stats.boostEfficiency = loadout.Booster.boostEfficiency;
             stats.boostJumpForce = loadout.Booster.boostJumpForce;
             stats.boostJumpCost = loadout.Booster.boostJumpCost;

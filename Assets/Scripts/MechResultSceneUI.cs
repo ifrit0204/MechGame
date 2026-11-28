@@ -28,36 +28,70 @@ public class MechResultSceneUI : MonoBehaviour
 
     [SerializeField] private float voiceStartDelay = 0.5f;
 
+    [Header("表示切り替え(ラベルと値の両方を入れる。空でもよい)")]
+    // ミッションのときだけ表示する項目(例: ヴェイン破壊数、特別加算額、依頼評価値)
+    [SerializeField] private GameObject[] missionOnlyObjects;
+    // アリーナのときだけ表示する項目(例: アリーナ順位)
+    [SerializeField] private GameObject[] arenaOnlyObjects;
+
     void Start()
     {
+        if (MechGameManager.Instance == null)
+        {
+            Debug.LogError("MechGameManager がありません");
+            return;
+        }
+
         var result = MechGameManager.Instance.CurrentResult;
 
-        titleText.text = result.title;
+        SetText(titleText, result.title);
 
-        killText.text = result.enemyKillCount.ToString();
+        SetText(killText, result.enemyKillCount.ToString());
 
-        damageText.text = result.damageTaken.ToString("0");
+        SetText(damageText, result.damageTaken.ToString("0"));
 
-        veinText.text = result.veinDestroyedCount.ToString();
+        SetText(veinText, result.veinDestroyedCount.ToString());
 
-        timeText.text = FormatTime(result.clearTime);
+        SetText(timeText, FormatTime(result.clearTime));
 
-        rewardText.text = result.missionReward + " C";
+        SetText(rewardText, result.missionReward + " C");
 
-        bonusText.text = result.bonusReward + " C";
+        SetText(bonusText, result.bonusReward + " C");
 
-        totalText.text = result.totalReward + " C";
+        SetText(totalText, result.totalReward + " C");
 
-        rankText.text = result.rank;
+        // アリーナでは評価ランクを使わないので、空欄ではなく「-」にする
+        SetText(rankText, string.IsNullOrEmpty(result.rank) ? "-" : result.rank);
 
-        arenaText.text = "#" + result.arenaRank;
+        SetText(arenaText, "#" + result.arenaRank);
+
+        SetActiveAll(missionOnlyObjects, !result.isArena);
+        SetActiveAll(arenaOnlyObjects, result.isArena);
 
         PlayResultVoice(result);
     }
 
+    private static void SetText(Text text, string value)
+    {
+        if (text != null)
+            text.text = value;
+    }
+
+    private static void SetActiveAll(GameObject[] objects, bool active)
+    {
+        if (objects == null)
+            return;
+
+        foreach (GameObject obj in objects)
+        {
+            if (obj != null)
+                obj.SetActive(active);
+        }
+    }
+
     private void PlayResultVoice(MechResultData result)
     {
-        // アリーナのときはミッションのボイスを流さない(後述)
+        // アリーナのときはミッションのボイスを流さない
         if (result.isArena)
             return;
 
@@ -80,6 +114,7 @@ public class MechResultSceneUI : MonoBehaviour
 
         return $"{min:00}:{sec:00}";
     }
+
     public void ReturnGarage()
     {
         MechGameManager.Instance.StopBriefing();

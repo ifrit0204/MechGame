@@ -42,26 +42,28 @@ public class MechEnemyMovement : MonoBehaviour
 
     private void Start()
     {
-        if(statsData != null)
+        bool hasPartsSpeed = control != null && control.Stats != null && control.Stats.moveSpeed > 0f;
+
+        if (hasPartsSpeed)
+        {
+            moveSpeed = control.moveSpeed;
+        }
+        else if (statsData != null)
         {
             moveSpeed = statsData.moveSpeed;
         }
-        else
+        else if (statsControl != null && statsControl.CurrentStats != null)
         {
-            if(statsControl == null)
-            {
-                Debug.LogError("StatsControl Null");
-                return;
-            }
-
-            if(statsControl.CurrentStats == null)
-            {
-                Debug.LogError("CurrentStats Null");
-                return;
-            }
-
             moveSpeed = statsControl.CurrentStats.moveSpeed;
         }
+        else
+        {
+            Debug.LogError("敵の移動速度が決まりません(StatsData も CurrentStats もありません)", this);
+            return;
+        }
+
+        if (!hasPartsSpeed && control != null && moveSpeed > 0f)
+            control.moveSpeed = moveSpeed;
 
         StartCoroutine(ChangeStrafe());
         StartCoroutine(ChangeOrbit());

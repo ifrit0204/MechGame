@@ -10,8 +10,10 @@ public class MechHyperBoostAction : MonoBehaviour
     public bool getHyperBoost, hasHyperBoosted, isHyperBoost, isHyperBoostReady, boostRecharge;
     public void OnHyperBoost(InputAction.CallbackContext context)
     {
+        if (context.performed && MechPauseMenuUI.IsPaused) return;
         if (context.performed)
         {
+            if (!mech.CanUseBoostEnergy) return;
             if (!getHyperBoost && mech.boostEnergy > 0)
             {
                 getHyperBoost = isHyperBoost = true;

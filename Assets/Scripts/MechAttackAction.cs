@@ -40,6 +40,12 @@ public class MechAttackAction : MonoBehaviour
     // Aptitude 1ポイントあたりの攻撃力アップ率(0.01 = 1ポイントで+1%)
     [SerializeField] private float aptitudeDamageRate = 0.01f;
 
+    [Header("Melee Cost / Recovery")]
+    [SerializeField] private float meleeStartCost = 10f;
+    [SerializeField] private float meleeApproachCostPerSec = 40f;
+    [SerializeField] private float meleeRecoveryTime = 0.6f;
+    [SerializeField] private float chargedRecoveryRate = 1.5f;
+
     private MechEquipment equipment;
     private MechLockOn lockOn;
     private Animator anim;
@@ -489,7 +495,7 @@ public class MechAttackAction : MonoBehaviour
         if (charged && !string.IsNullOrEmpty(weapon.chargeAttackTrigger))
             trigger = weapon.chargeAttackTrigger;
 
-        StartCoroutine(MeleeApproachAndAttack(attackData, melee, trigger));
+        StartCoroutine(MeleeApproachAndAttack(attackData, melee, trigger, charged));
     }
 
     // チャージ攻撃用に、damageData を chargeDamageData に差し替えた複製を使う
@@ -509,7 +515,7 @@ public class MechAttackAction : MonoBehaviour
         return data;
     }
 
-    private IEnumerator MeleeApproachAndAttack(MechWeaponPartData attackData, MechMeleeWeapon melee, string trigger)
+    private IEnumerator MeleeApproachAndAttack(MechWeaponPartData attackData, MechMeleeWeapon melee, string trigger, bool charged)
     {
         meleeBusy = true;
 
@@ -517,34 +523,44 @@ public class MechAttackAction : MonoBehaviour
         {
             Transform target = CurrentLockTarget;
 
-            if (target != null)
+            // エネルギーが残っているときだけ詰める。切れていればその場で振る
+            if (target != null && mech.CanUseBoostEnergy)
             {
+                mech.boostEnergy -= meleeStartCost;
+                mech.isMeleeApproaching = true;
+
                 float elapsed = 0f;
 
-                while (target != null && elapsed < meleeApproachMaxTime)
+                while (target != null && elapsed < meleeApproachMaxTime && mech.CanUseBoostEnergy)
                 {
                     Vector3 dir = target.position - transform.position;
 
                     if (dir.magnitude <= meleeAttackDistance)
                         break;
 
-                    transform.position += dir.normalized * mech.boostForce * Time.deltaTime;
+                    mech.boostEnergy -= meleeApproachCostPerSec * Time.deltaTime;
 
+                    transform.position += dir.normalized * mech.boostForce * Time.deltaTime;
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * 15f);
 
                     elapsed += Time.deltaTime;
-
                     yield return null;
                 }
+
+                mech.isMeleeApproaching = false;
             }
 
-            // melee.SetWeapon(attackData);
             melee.SetWeapon(attackData, GetMeleeDamageMultiplier());
-
             anim.SetTrigger(trigger);
+
+            // 振った後の硬直（この間は移動も次の近接もできない）
+            float recovery = meleeRecoveryTime * (charged ? chargedRecoveryRate : 1f);
+            mech.LockActions(recovery);
+            yield return new WaitForSeconds(recovery);
         }
         finally
         {
+            mech.isMeleeApproaching = false;
             meleeBusy = false;
         }
     }

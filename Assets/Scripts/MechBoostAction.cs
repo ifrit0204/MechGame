@@ -10,8 +10,10 @@ public class MechBoostAction : MonoBehaviour
     public bool boosting, getBoost, isBoost, hasBoosted, boostRecharge;
     public void OnBoost(InputAction.CallbackContext context)
     {
+        if (context.performed && MechPauseMenuUI.IsPaused) return;
         if (context.performed)
         {
+            if (!mech.CanUseBoostEnergy) return;
             if (!getBoost)
             {
                 getBoost = isBoost = true;

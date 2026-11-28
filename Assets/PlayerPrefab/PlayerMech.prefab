@@ -903,6 +903,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: -2782142206362496983}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d8c5d19d9a05404f9d9c7617165945c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9187492139162915066}
     - targetCorrespondingSourceObject: {fileID: -1397303492462338110, guid: 9d8c5d19d9a05404f9d9c7617165945c,
         type: 3}
       insertIndex: -1
@@ -1021,6 +1025,8 @@ MonoBehaviour:
   damageData:
     Damage: 50
     Type: 0
+  hitEffectPrefab: {fileID: 0}
+  damageEffectPrefab: {fileID: 0}
 --- !u!4 &1760740856803596591 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7259823799755662946, guid: 9d8c5d19d9a05404f9d9c7617165945c,
@@ -1138,6 +1144,8 @@ MonoBehaviour:
   damageData:
     Damage: 120
     Type: 0
+  hitEffectPrefab: {fileID: 0}
+  damageEffectPrefab: {fileID: 0}
 --- !u!1 &7728191624583169696 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7498644679047857683, guid: 9d8c5d19d9a05404f9d9c7617165945c,
@@ -1207,6 +1215,8 @@ MonoBehaviour:
   damageData:
     Damage: 120
     Type: 0
+  hitEffectPrefab: {fileID: 0}
+  damageEffectPrefab: {fileID: 0}
 --- !u!1 &8101433545972138524 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d8c5d19d9a05404f9d9c7617165945c,
@@ -1281,6 +1291,7 @@ MonoBehaviour:
   groundMultiplier: 0
   boostForce: 1200
   boostFirstForce: 4800
+  boostVerticalForce: 0
   boostJumpForce: 2400
   hyperBoost: 288
   hyperFirstBoost: 3840
@@ -1290,6 +1301,7 @@ MonoBehaviour:
   boostEnergyMax: 120
   boostCost: 60
   boostJumpCost: 90
+  boostVerticalCost: 0
   hyperBoostCost: 45
   boostEfficiency: 0.36
   energyRechargeRate: 24
@@ -1311,6 +1323,8 @@ MonoBehaviour:
   maxHP: 0
   currentHP: 0
   totalDamageTaken: 0
+  totalWeight: 0
+  boostWeightMultiplier: 1
   team: 0
   explosionPrefab: {fileID: 5408913939273050752, guid: 3d9eb7b0939901449a476f0f8b97ddda,
     type: 3}
@@ -1329,6 +1343,7 @@ MonoBehaviour:
   hasBoosted: 0
   getJump: 0
   isJump: 0
+  isVerticalBoost: 0
   boostJumping: 0
   boostJump: 0
   hasBoostJumped: 0
@@ -1658,13 +1673,13 @@ MonoBehaviour:
     m_ActionName: KeyBoard/LeftShoulderWeaponShoot[/Keyboard/m]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 9187492139162915066}
+        m_TargetAssemblyTypeName: MechPauseInput, Assembly-CSharp
+        m_MethodName: OnCancel
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1674,13 +1689,13 @@ MonoBehaviour:
     m_ActionName: XboxControl/Cancel
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 9187492139162915066}
+        m_TargetAssemblyTypeName: MechPauseInput, Assembly-CSharp
+        m_MethodName: OnCancel
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1688,6 +1703,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 0d7ebd05-7d04-477a-82df-f9783f48f212
     m_ActionName: KeyBoard/Cancel[/Mouse/rightButton,/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9187492139162915066}
+        m_TargetAssemblyTypeName: MechPauseInput, Assembly-CSharp
+        m_MethodName: OnMenu
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 33981c69-52df-4729-a8bd-3aa068bc8633
+    m_ActionName: XboxControl/Menu
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9187492139162915066}
+        m_TargetAssemblyTypeName: MechPauseInput, Assembly-CSharp
+        m_MethodName: OnMenu
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 35a864a4-3309-485a-b718-51eadbaaf448
+    m_ActionName: KeyBoard/Menu[/Keyboard/f]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: 
@@ -1706,10 +1753,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mech: {fileID: 2169807185375544521}
+  doubleTapTime: 0.25
   getJump: 0
   isJump: 0
   hasJumped: 0
-  boostJumping: 0
+  isVerticalBoost: 0
   boostJump: 0
   hasBoosted: 0
   hasBoostJumped: 0
@@ -1787,6 +1835,7 @@ MonoBehaviour:
   punchRightTrigger: PunchRight
   punchLeftTrigger: PunchLeft
   uppercutTrigger: UpperCut
+  aptitudeDamageRate: 0.01
 --- !u!114 &7788270984161551128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1835,6 +1884,10 @@ MonoBehaviour:
   FCSSocket: {fileID: 2742189993145775027}
   boosterSocket: {fileID: 8476722529342591663}
   generatorSocket: {fileID: 2742189993145775027}
+  weightReference: 100000
+  maxBoostWeightPenalty: 0.3
+  consumptionToRecharge: 1
+  minRechargeRatio: 0.1
 --- !u!114 &990280320061731464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1885,6 +1938,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3562ec915dc65164c8db084c7eefb3ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &9187492139162915066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8101433545972138524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 771413e93f3547c4da98b55a47056768, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &8212743604382150815 stripped

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Booster2
   m_EditorClassIdentifier: 
   partName: Booster2
+  description: 
   icon: {fileID: 0}
   modelPrefab: {fileID: 919132149155446097, guid: f664a25bb67aa31438bea5b7a6503fbe,
     type: 3}
@@ -22,7 +23,9 @@ MonoBehaviour:
   boostForce: 720
   boostFirstForce: 2400
   boostCost: 36
-  boostEfficiency: 0
+  boostVerticalForce: 0
+  boostVerticalCost: 0
+  boostEfficiency: 4
   boostJumpForce: 1200
   boostJumpCost: 60
   hyperBoostForce: 600

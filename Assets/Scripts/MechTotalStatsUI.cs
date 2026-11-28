@@ -42,6 +42,8 @@ public class MechTotalStats
 
     public float boostForce;
     public float boostFirstForce;
+    public float boostVerticalForce;
+    public float boostVerticalCost;
     public float boostCost;
     public float boostEfficiency;
     public float boostEnergyCost;

@@ -6643,6 +6643,7 @@ MonoBehaviour:
   garageMenu: {fileID: 2042098891}
   partListUI: {fileID: 392208879}
   confirmDialog: {fileID: 1501038268}
+  quitDialog: {fileID: 1501038268}
 --- !u!114 &761717958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6773,6 +6774,14 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 0d7ebd05-7d04-477a-82df-f9783f48f212
     m_ActionName: KeyBoard/Cancel[/Mouse/rightButton,/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 33981c69-52df-4729-a8bd-3aa068bc8633
+    m_ActionName: XboxControl/Menu[/XInputControllerWindows/start]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 35a864a4-3309-485a-b718-51eadbaaf448
+    m_ActionName: KeyBoard/Menu[/Keyboard/f]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: 
@@ -13264,6 +13273,53 @@ MonoBehaviour:
   emptyIcon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   selectedBackground: {fileID: 230128125}
   equippedMark: {fileID: 0}
+--- !u!1 &1713174982
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1713174984}
+  - component: {fileID: 1713174983}
+  m_Layer: 0
+  m_Name: MechPauseMenuUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1713174983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713174982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 946b702bf5eb27947b2b99a9933a3611, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  confirmDialog: {fileID: 1501038268}
+  garageSceneName: GarageScene
+  message: "\u30AC\u30EC\u30FC\u30B8\u306B\u623B\u308A\u307E\u3059\u304B?"
+--- !u!4 &1713174984
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713174982}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1727545507
 GameObject:
   m_ObjectHideFlags: 0
@@ -16686,3 +16742,4 @@ SceneRoots:
   - {fileID: 993700058}
   - {fileID: 32789485}
   - {fileID: 509226010}
+  - {fileID: 1713174984}

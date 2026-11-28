@@ -71,6 +71,7 @@ public class MechCameraControl : MonoBehaviour
 
     void LateUpdate()
     {
+        if (MechPauseMenuUI.IsPaused) return;
         if (mech == null)
         {
             mech = FindFirstObjectByType<MechControl>();

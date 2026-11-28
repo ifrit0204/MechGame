@@ -29,6 +29,12 @@ public class MechArenaBattleSpawner : MonoBehaviour
         if(enemyData == null)
             return;
 
+        if (enemyData.loadout == null)
+        {
+            Debug.LogError("MechArenaEnemyData に loadout が設定されていません: " + enemyData.enemyName, enemyData);
+            return;
+        }
+
         GameObject enemy = Instantiate(enemyMechPrefab, transform.position, transform.rotation);
 
         MechEnemyAI enemyAI = enemy.GetComponent<MechEnemyAI>();
@@ -41,6 +47,9 @@ public class MechArenaBattleSpawner : MonoBehaviour
         }
 
         enemyAI.Target = playerTarget;
+
+        // Loadout に指定された思考設定を適用する(未設定なら何もしない)
+        enemyAI.ApplyProfile(enemyData.loadout.aiProfile);
 
         MechEquipment equipment = enemy.GetComponent<MechEquipment>();
 
@@ -61,29 +70,30 @@ public class MechArenaBattleSpawner : MonoBehaviour
             enemyWeapon.SetMuzzle(weaponObj.transform);
         }
 
+        // パーツを装備し終えたあとで、能力値を計算して敵の動きに渡す
+        enemy.GetComponent<MechEnemyControl>().ApplyParts();
+
         enemy.GetComponent<MechStatsControl>().RefreshStats();
     }
 
+    // 敵のパーツを装備する。
+    // equipment.ApplyLoadout() は MechGameManager.CurrentLoadout(プレイヤーの装備)を
+    // 書き換えてしまうので、敵には使わず、EquipPart で1つずつ装備する。
     private void ApplyEnemyLoadout(MechEquipment equipment, MechEnemyLoadout loadout)
     {
-        MechLoadout temp = new MechLoadout();
+        equipment.EquipPart(PartType.Head, loadout.Head);
+        equipment.EquipPart(PartType.Body, loadout.Body);
+        equipment.EquipPart(PartType.Arms, loadout.Arms);
+        equipment.EquipPart(PartType.Legs, loadout.Legs);
 
-        temp.Head = loadout.Head;
-        temp.Body = loadout.Body;
-        temp.Arms = loadout.Arms;
-        temp.Legs = loadout.Legs;
+        equipment.EquipPart(PartType.RightWeapon, loadout.RightWeapon);
+        equipment.EquipPart(PartType.LeftWeapon, loadout.LeftWeapon);
 
-        temp.RightWeapon = loadout.RightWeapon;
-        temp.LeftWeapon = loadout.LeftWeapon;
+        equipment.EquipPart(PartType.RightShoulder, loadout.RightShoulder);
+        equipment.EquipPart(PartType.LeftShoulder, loadout.LeftShoulder);
 
-        temp.RightShoulder = loadout.RightShoulder;
-
-        temp.LeftShoulder = loadout.LeftShoulder;
-
-        temp.Booster = loadout.Booster;
-        temp.FCS = loadout.FCS;
-        temp.Generator = loadout.Generator;
-
-        equipment.ApplyLoadout(temp);
+        equipment.EquipPart(PartType.Booster, loadout.Booster);
+        equipment.EquipPart(PartType.FCS, loadout.FCS);
+        equipment.EquipPart(PartType.Generator, loadout.Generator);
     }
 }

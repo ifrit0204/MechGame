@@ -33,26 +33,26 @@ public class MechEnemyUnitControl : MonoBehaviour, IDamageable
     {
         isDead = false;
 
-        if (statsData != null)
-        {
-            maxHP = statsData.maxHP;
-        }
-        else
-        {
-            if(statsControl == null)
-            {
-                Debug.LogError("StatsControl Null");
-                return;
-            }
+        float hp = 0f;
 
-            if(statsControl.CurrentStats == null)
-            {
-                Debug.LogError("CurrentStats Null");
-                return;
-            }
+        MechEnemyControl control = GetComponent<MechEnemyControl>();
 
-            maxHP = statsControl.CurrentStats.armor;
+        if (control != null && control.Stats != null)
+            hp = control.Stats.armor;
+
+        if (hp <= 0f && statsData != null)
+            hp = statsData.maxHP;
+
+        if (hp <= 0f && statsControl != null && statsControl.CurrentStats != null)
+            hp = statsControl.CurrentStats.armor;
+
+        if (hp <= 0f)
+        {
+            Debug.LogError("敵のHPが決まりません(パーツの装甲値も StatsData の maxHP も0です)", this);
+            return;
         }
+
+        maxHP = hp;
 
         currentHP = maxHP;
 

@@ -278,6 +278,12 @@ public class MechGameManager : MonoBehaviour
 
     public void EnemyDestroyed()
     {
+        // アリーナは敵1体を倒したらクリア(ミッションの残敵数カウントは使わない)
+        if (SceneManager.GetActiveScene().name == "ArenaScene")
+        {
+            ArenaClear();
+            return;
+        }
         enemyCount--;
         Debug.Log("EnemyDestroyed");
         Debug.Log("残敵数 : " + enemyCount);
@@ -358,9 +364,17 @@ public class MechGameManager : MonoBehaviour
 
         isClearing = true;
 
+        string id = CurrentArenaEnemy.enemyName;
+
         int reward = CurrentArenaEnemy.reward;
 
-        string id = CurrentArenaEnemy.enemyName;
+        // 報酬を受け取れるのは、その敵を初めて倒したときだけ
+        // (HashSet.Add は、新しく追加できたときに true を返す)
+        bool firstClear = clearedArenaEnemies.Add(id);
+
+        int paidReward = firstClear ? reward : 0;
+
+        int totalReward = paidReward + bonusCredits;
 
         CurrentResult.title = CurrentArenaEnemy.enemyName;
 
@@ -368,13 +382,29 @@ public class MechGameManager : MonoBehaviour
 
         CurrentResult.isArena = true;
 
-        if(!clearedArenaEnemies.Contains(id))
+        // リザルトには「実際に受け取った額」を表示する
+        CurrentResult.missionReward = paidReward;
+
+        CurrentResult.bonusReward = bonusCredits;
+
+        CurrentResult.totalReward = totalReward;
+
+        // ボイスを流す前の時点で確定させる(ボイスの時間を含めない)
+        CurrentResult.clearTime = Time.time - missionStartTime;
+
+        MechControl player = FindFirstObjectByType<MechControl>();
+
+        if(player != null)
         {
-            Credits += reward;
-            clearedArenaEnemies.Add(id);
+            CurrentResult.damageTaken = player.totalDamageTaken;
         }
 
-        LastReward = reward;
+        Credits += totalReward;
+
+        // 次のミッション・アリーナに持ち越さない
+        bonusCredits = 0;
+
+        LastReward = totalReward;
         LastResultTitle = CurrentArenaEnemy.enemyName;
         HasResult = true;
 

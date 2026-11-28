@@ -7,6 +7,7 @@ public class MechEnemyWeapon : MonoBehaviour
     public GameObject bulletPrefab;
     [SerializeField] private MechWeaponPartData weaponData;
     [SerializeField] private Transform armPivot;
+    [SerializeField] private float aptitudeDamageRate = 0.01f;
 
     [Header("Melee")]
     // アニメーションを再生できない場合だけ使う、タイマー式のヒット判定
@@ -162,7 +163,8 @@ public class MechEnemyWeapon : MonoBehaviour
             return;
 
         nextMeleeAttackTime = Time.time + Mathf.Max(meleeCooldown, meleeWeaponData.reloadTime);
-        meleeWeapon.SetWeapon(meleeWeaponData);
+        // meleeWeapon.SetWeapon(meleeWeaponData);
+        meleeWeapon.SetWeapon(meleeWeaponData, GetMeleeDamageMultiplier());
 
         activeMeleeWeapon = meleeWeapon;
         meleeAttackInProgress = true;
@@ -187,6 +189,16 @@ public class MechEnemyWeapon : MonoBehaviour
     public void DisableMeleeWeaponHitbox()
     {
         FinishMeleeAttack();
+    }
+
+    private float GetMeleeDamageMultiplier()
+    {
+        MechEnemyControl enemyControl = GetComponent<MechEnemyControl>();
+
+        if (enemyControl == null || enemyControl.Stats == null)
+            return 1f;
+
+        return 1f + enemyControl.Stats.meleeAptitude * aptitudeDamageRate;
     }
 
     private IEnumerator MeleeAttackRoutine(bool animationDriven)

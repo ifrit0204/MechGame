@@ -35,6 +35,8 @@ public class MechEnemyAI : MonoBehaviour
         set => blackboard.Target = value;
     }
 
+    private float statsRegenPerSec = -1f;
+
     private float actionLockTimer;
     [SerializeField] private float minActionDuration = 1.5f;
 
@@ -173,6 +175,24 @@ public class MechEnemyAI : MonoBehaviour
 
         if (weapon != null)
             weapon.accuracy = accuracy;
+        
+        if (movement != null)
+            movement.ApplyApproachSettings(profile.approach);
+    }
+
+    public void ApplyStats(MechTotalStats stats, float regenPerSec)
+    {
+        if (stats == null || blackboard == null)
+            return;
+
+        if (stats.boostEnergyMax > 0f)
+        {
+            blackboard.MaxBoostEnergy = stats.boostEnergyMax;
+            blackboard.BoostEnergy = stats.boostEnergyMax;
+        }
+
+        if (regenPerSec > 0f)
+            statsRegenPerSec = regenPerSec;
     }
 
     private void Start()
@@ -182,6 +202,11 @@ public class MechEnemyAI : MonoBehaviour
         {
             ApplyProfile(statsData.aiProfile);
         }
+
+        MechEnemyControl enemyControl = GetComponent<MechEnemyControl>();
+
+        if (enemyControl != null)
+            ApplyStats(enemyControl.Stats, enemyControl.EnergyRechargeRate);
 
         if (statsData != null)
         {
@@ -207,6 +232,7 @@ public class MechEnemyAI : MonoBehaviour
         alertTimer = alertTime;
 
         weapon.accuracy = accuracy;
+
     }
 
     private void Update()
@@ -339,10 +365,16 @@ public class MechEnemyAI : MonoBehaviour
     // (これがないとブーストが一度空になると戻らず、攻撃性は上がる一方になる)
     void RegenerateResources()
     {
+        float regen = statsRegenPerSec > 0f ? statsRegenPerSec : boostRegenPerSec;
+
         blackboard.BoostEnergy = Mathf.Clamp(
-            blackboard.BoostEnergy + boostRegenPerSec * Time.deltaTime,
+            blackboard.BoostEnergy + regen * Time.deltaTime,
             0f,
             blackboard.MaxBoostEnergy);
+        // blackboard.BoostEnergy = Mathf.Clamp(
+        //     blackboard.BoostEnergy + boostRegenPerSec * Time.deltaTime,
+        //     0f,
+        //     blackboard.MaxBoostEnergy);
 
         blackboard.Pressure = Mathf.Max(0f, blackboard.Pressure - pressureDecayPerSec * Time.deltaTime);
 

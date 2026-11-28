@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class MechControl : MonoBehaviour, IDamageable
 {
-    public float moveSpeed, jumpForce, jumpPerformance, groundMultiplier, boostForce, boostFirstForce, boostJumpForce, hyperBoost, hyperFirstBoost, fallSpeed, jumpCancelSpeed;
-    public float boostEnergy, boostEnergyMax, boostCost, boostJumpCost, hyperBoostCost, boostEfficiency, energyRechargeRate, energyRechargeRateBasic;
+    public float moveSpeed, jumpForce, jumpPerformance, groundMultiplier, boostForce, boostFirstForce, boostVerticalForce, boostJumpForce, hyperBoost, hyperFirstBoost, fallSpeed, jumpCancelSpeed;
+    public float boostEnergy, boostEnergyMax, boostCost, boostJumpCost, boostVerticalCost, hyperBoostCost, boostEfficiency, energyRechargeRate, energyRechargeRateBasic;
     public float jumpTime, jumpTimer, boostTime, boostTimer, boostJumpTime, boostJumpTimer, boostRechargeTime, boostRechargeTimer, energyRechargeTime, energyRechargeTimer;
     public float groundCheckDistance, upwardLimit;
     public float upwardVelocity, gravityVelocity;
@@ -16,11 +16,6 @@ public class MechControl : MonoBehaviour, IDamageable
     public float currentHP;
     public float totalDamageTaken;
 
-    // [Header("Weight")]
-    // // 総重量がこの値のとき、ブースト速度の減少が最大になる(機体の最大想定重量に合わせて調整)
-    // [SerializeField] private float weightReference = 100000f;
-    // // 最大でどれだけ減らすか(0.3 = 最大30%減)
-    // [SerializeField, Range(0f, 0.9f)] private float maxBoostWeightPenalty = 0.3f;
 
     public float totalWeight;
     public float boostWeightMultiplier = 1f;
@@ -43,7 +38,11 @@ public class MechControl : MonoBehaviour, IDamageable
     public LayerMask groundLayer;
     public Rigidbody rb;
     public Animator anim;
-    public bool isGrounded, isEnergyRecharge, getBoost, boosting, isBoost, hasBoosted, getJump, isJump, boostJumping, boostJump, hasBoostJumped, getHyperBoost, isHyperBoost, isHyperBoostReady, hasHyperBoosted, boostRecharge, hasJumped, isFall, isMeleeDash;
+    public bool isGrounded, isEnergyRecharge, getBoost, boosting, isBoost, hasBoosted, getJump, isJump, isVerticalBoost, boostJumping, boostJump, hasBoostJumped, getHyperBoost, isHyperBoost, isHyperBoostReady, hasHyperBoosted, boostRecharge, hasJumped, isFall, isMeleeDash;
+    public bool CanUseBoostEnergy => !isEnergyRecharge && boostEnergy > 0f;
+    public bool isMeleeApproaching;
+    public float actionLockTimer;
+    public bool IsActionLocked => actionLockTimer > 0f;
     private bool isDead;
     private bool energyInitialized;
     private MechJumpAction mechJump;
@@ -73,6 +72,32 @@ public class MechControl : MonoBehaviour, IDamageable
 
         Transform cam = Camera.main.transform;
     }
+    void StopAllBoosts()
+    {
+        boosting = isBoost = getBoost = isVerticalBoost = boostJump = isHyperBoost = false;
+
+        mechBoost.boosting = false;
+        mechBoost.getBoost = false;
+        mechBoost.isBoost = false;
+
+        mechJump.isVerticalBoost = false;
+        mechJump.boostJump = false;
+
+        mechHyper.isHyperBoost = false;
+
+        boostTime = boostTimer;
+        boostJumpTime = boostJumpTimer;
+
+        mechCamera.SetBoostFOV(false);
+        mechCamera.SetBoostCameraSpeed(false);
+        mechCamera.ResetCameraEffects();
+    }
+
+    public void LockActions(float time)
+    {
+        actionLockTimer = Mathf.Max(actionLockTimer, time);
+    }
+
     void Start()
     {
         hasBoostJumped = isDead = false;
@@ -159,6 +184,9 @@ public class MechControl : MonoBehaviour, IDamageable
             boostForce = b.boostForce * boostWeightMultiplier;
             boostFirstForce = b.boostFirstForce * boostWeightMultiplier;
             boostCost = b.boostCost;
+            boostVerticalForce = b.boostVerticalForce * boostWeightMultiplier;
+            boostVerticalCost = b.boostVerticalCost;
+            
             boostEfficiency = b.boostEfficiency;
             boostJumpForce = b.boostJumpForce * boostWeightMultiplier;;
             boostJumpCost = b.boostJumpCost;
@@ -171,9 +199,11 @@ public class MechControl : MonoBehaviour, IDamageable
         {
             MechGeneratorPartData g = equipment.generator;
 
+            MechTotalStats stats = equipment.CalculateTotalStats();
+
             boostEnergyMax = g.boostEnergyMax;
-            energyRechargeRate = g.energyRechargeRate;
-            energyRechargeRateBasic = g.energyRechargeRateBasic;
+            energyRechargeRate = equipment.CalcRechargeRate(g.energyRechargeRate, stats);
+            energyRechargeRateBasic = equipment.CalcRechargeRate(g.energyRechargeRateBasic, stats);
 
             if (!energyInitialized)
             {
@@ -276,6 +306,7 @@ public class MechControl : MonoBehaviour, IDamageable
     }
     void FixedUpdate()
     {
+
         Transform cam = Camera.main.transform;
 
         Vector3 camForward = cam.forward;
@@ -287,9 +318,12 @@ public class MechControl : MonoBehaviour, IDamageable
         camForward.Normalize();
         camRight.Normalize();
 
-        Vector3 movement = camForward * moveInput.y + camRight * moveInput.x;
+        // Vector3 movement = camForward * moveInput.y + camRight * moveInput.x;
+        if (actionLockTimer > 0f) actionLockTimer -= Time.fixedDeltaTime;
 
+        Vector3 movement = IsActionLocked ? Vector3.zero : camForward * moveInput.y + camRight * moveInput.x;
         Vector3 targetMove = movement * moveSpeed * groundMultiplier; // groundMultiplier
+
 
         // ★ 慣性を使って滑らかに移動
         horizontalVelocity = Vector3.Lerp(horizontalVelocity, targetMove, Time.fixedDeltaTime * 10f);
@@ -414,28 +448,36 @@ public class MechControl : MonoBehaviour, IDamageable
                 // mechBoost.boostRecharge = boostRecharge;
             }
         }
-        if (boosting && !(isBoost || isHyperBoost))
+        if (boosting && !(isBoost || isHyperBoost) && CanUseBoostEnergy)
         {
-            boostEnergy -= boostCost * Time.fixedDeltaTime * boostEfficiency;
+            boostEnergy -= boostCost * Time.fixedDeltaTime;
             boostDirection.Normalize();
             horizontalVelocity = boostDirection * boostForce;
             Quaternion targetRotation = Quaternion.LookRotation(boostDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.36f);
             rb.AddForce(horizontalVelocity, ForceMode.Acceleration);
         }
-        if (boostJumping)
+        if (isVerticalBoost && boostEnergy > 0 && !isGrounded && CanUseBoostEnergy)
         {
-            Debug.Log("Jumping!");
             float upwardDrag = Mathf.Lerp(1f, 0.54f, rb.velocity.y / jumpForce);
-            boostEnergy -= boostCost * Time.fixedDeltaTime;
-            upwardVelocity = jumpForce * upwardDrag;
+            boostEnergy -= boostVerticalCost * Time.fixedDeltaTime;
+            upwardVelocity = boostVerticalForce * upwardDrag;
             gravityVelocity = 0.00f;
-            // boostDirection.Normalize();
-            // horizontalVelocity = boostDirection * boostForce;
-            // Quaternion targetRotation = Quaternion.LookRotation(boostDirection);
-            // transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.36f);
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Acceleration);
+            rb.AddForce(Vector3.up * boostVerticalForce, ForceMode.Acceleration);
         }
+        // if (boostJumping)
+        // {
+        //     Debug.Log("Jumping!");
+        //     float upwardDrag = Mathf.Lerp(1f, 0.54f, rb.velocity.y / jumpForce);
+        //     boostEnergy -= boostCost * Time.fixedDeltaTime;
+        //     upwardVelocity = jumpForce * upwardDrag;
+        //     gravityVelocity = 0.00f;
+        //     // boostDirection.Normalize();
+        //     // horizontalVelocity = boostDirection * boostForce;
+        //     // Quaternion targetRotation = Quaternion.LookRotation(boostDirection);
+        //     // transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.36f);
+        //     rb.AddForce(Vector3.up * jumpForce, ForceMode.Acceleration);
+        // }
         if (!isHyperBoost)
         {
             if (!isGrounded && rb.velocity.y < 0)
@@ -508,9 +550,9 @@ public class MechControl : MonoBehaviour, IDamageable
         if (isBoost && boostTime >= 0 && boostEnergy > 0)
         {
             boostTime -= Time.fixedDeltaTime;
-            boostEnergy -= boostCost * Time.fixedDeltaTime;
-            mechCamera.SetBoostFOV(true);
-            mechCamera.SetBoostCameraSpeed(true);
+            boostEnergy -= boostCost * Time.fixedDeltaTime * boostEfficiency;
+            // mechCamera.SetBoostFOV(true);
+            // mechCamera.SetBoostCameraSpeed(true);
             boostDirection.Normalize();
 
             // ★ ブースト開始時に水平慣性方向を記録
@@ -547,14 +589,19 @@ public class MechControl : MonoBehaviour, IDamageable
             rb.AddForce(horizontalVelocity, ForceMode.Acceleration);
         }
         
-        if (boostEnergy <= 0)
+        // エネルギー切れ → 全ブースト停止&再供給待ち
+        if (boostEnergy <= 0f && !isEnergyRecharge)
         {
+            boostEnergy = 0f;
             isEnergyRecharge = true;
-            isBoost = isHyperBoost = false;
-            mechBoost.isBoost = isBoost;
-            mechHyper.isHyperBoost = isHyperBoost;
+            energyRechargeTime = energyRechargeTimer;
+            StopAllBoosts();
+        }
+
+        if (isEnergyRecharge)
+        {
             energyRechargeTime -= Time.fixedDeltaTime;
-            if (energyRechargeTime <= 0)
+            if (energyRechargeTime <= 0f)
             {
                 boostEnergy = boostEnergyMax / 2;
                 isEnergyRecharge = false;
@@ -583,13 +630,9 @@ public class MechControl : MonoBehaviour, IDamageable
         //     boostEnergy = Mathf.Min(boostEnergy + energyRechargeRate * Time.fixedDeltaTime, boostEnergyMax);
         //     // boostEnergy = Mathf.Clamp(boostEnergy, 0, boostEnergyMax);
         // }
-        if (!boosting && !isBoost && !boostJump && !isHyperBoost)
+        if (!boosting && !isBoost && !boostJump && !isHyperBoost && !isVerticalBoost && !isEnergyRecharge && !isMeleeApproaching)
         {
-            if (isEnergyRecharge) return;
-
-            // 接地中は energyRechargeRate、空中は energyRechargeRateBasic
             float rechargeRate = isGrounded ? energyRechargeRate : energyRechargeRateBasic;
-
             boostEnergy = Mathf.Min(boostEnergy + rechargeRate * Time.fixedDeltaTime, boostEnergyMax);
         }
         if(isMeleeDash && lockOn.currentTarget != null)
